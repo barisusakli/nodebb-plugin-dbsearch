@@ -4,7 +4,9 @@
     "description": "A Plugin that let's users search posts and topics",
     "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
     "library": "./index.js",
-    "staticDir": "./public",
+    "staticDirs": {
+        "dbsearch": "public"
+    },
     "hooks": [
 
         { "hook": "filter:admin.create_routes", "method": "admin.route", "callbacked": true },
