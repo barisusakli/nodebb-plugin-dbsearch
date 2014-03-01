@@ -1,0 +1,25 @@
+{
+    "id": "nodebb-plugin-dbsearch",
+    "name": "DB Search",
+    "description": "A Plugin that let's users search posts and topics",
+    "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
+    "library": "./index.js",
+    "staticDir": "./public",
+    "hooks": [
+
+        { "hook": "filter:admin.create_routes", "method": "admin.route", "callbacked": true },
+        { "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false },
+
+        { "hook": "action:post.save", "method": "postSave"},
+        { "hook": "action:post.delete", "method": "postDelete"},
+        { "hook": "action:post.restore", "method": "postRestore"},
+        { "hook": "action:post.edit", "method": "postEdit"},
+
+        { "hook": "action:topic.save", "method": "topicSave"},
+        { "hook": "action:topic.delete", "method": "topicDelete"},
+        { "hook": "action:topic.restore", "method": "topicRestore"},
+        { "hook": "action:topic.edit", "method": "topicEdit"},
+
+        { "hook": "filter:search.query", "method": "searchQuery", "callbacked": true}
+    ]
+}

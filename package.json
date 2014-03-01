@@ -1,0 +1,17 @@
+{
+  "name": "nodebb-plugin-dbsearch",
+  "version": "0.0.1",
+  "description": "A Plugin that let's users search posts and topics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "search"
+  ],
+  "author": "Baris Usakli <baris@designcreateplay.com>",
+  "license": "BSD-2-Clause",
+  "dependencies": {}
+}
