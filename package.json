@@ -13,5 +13,8 @@
   ],
   "author": "Baris Usakli <baris@designcreateplay.com>",
   "license": "BSD-2-Clause",
-  "dependencies": {}
+  "dependencies": {
+    "async": "~0.2.8",
+    "winston": "~0.7.2"
+  }
 }

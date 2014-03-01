@@ -23,5 +23,6 @@
         { "hook": "action:topic.edit", "method": "topicEdit"},
 
         { "hook": "filter:search.query", "method": "searchQuery", "callbacked": true}
-    ]
+    ],
+    "minver": "0.4.0"
 }
