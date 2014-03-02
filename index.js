@@ -211,7 +211,7 @@ var winston = require('winston'),
 
 						db.setObject('nodebb-plugin-dbsearch', data, function(err) {
 							if (err) {
-								res.json(500, 'error-saving');
+								return res.json(500, 'error-saving');
 							}
 
 							postLimit = data.postLimit;
