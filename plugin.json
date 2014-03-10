@@ -9,7 +9,7 @@
     },
     "hooks": [
 
-        { "hook": "filter:admin.create_routes", "method": "admin.route", "callbacked": true },
+        { "hook": "action:app.load", "method": "init", "callbacked": true },
         { "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false },
 
         { "hook": "action:post.save", "method": "postSave"},
@@ -24,5 +24,6 @@
 
         { "hook": "filter:search.query", "method": "searchQuery", "callbacked": true}
     ],
-    "minver": "0.4.0"
+    "minver": "0.4.0",
+    "templates": "./public/templates"
 }

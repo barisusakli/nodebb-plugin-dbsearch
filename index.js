@@ -145,6 +145,57 @@ var winston = require('winston'),
 		});
 	};
 
+	function renderAdmin(req, res, next) {
+		db.getObject('nodebb-plugin-dbsearch', function(err, data) {
+			if (!data) {
+				data = {
+					topicLimit: defaultTopicLimit,
+					postLimit: defaultPostLimit
+				};
+			}
+
+			res.render('admin/plugins/dbsearch', data);
+		});
+	}
+
+	function reindex(req, res, next) {
+		search.reindex(function(err) {
+			if(err) {
+				return res.json(500, 'failed to reindex');
+			}
+
+			res.json('Content reindexed');
+		});
+	}
+
+	function save(req, res, next) {
+		if(utils.isNumber(req.body.postLimit) && utils.isNumber(req.body.topicLimit)) {
+			var data = {
+				postLimit: req.body.postLimit,
+				topicLimit: req.body.topicLimit
+			};
+
+			db.setObject('nodebb-plugin-dbsearch', data, function(err) {
+				if (err) {
+					return res.json(500, 'error-saving');
+				}
+
+				postLimit = data.postLimit;
+				topicLimit = data.topicLimit;
+
+				res.json('Settings saved!');
+			});
+		}
+	}
+
+	search.init = function(app, middleware, controllers) {
+		app.get('/admin/plugins/dbsearch', middleware.admin.buildHeader, renderAdmin);
+		app.get('/api/admin/plugins/dbsearch', renderAdmin);
+
+		app.post('/api/admin/plugins/dbsearch/reindex', reindex);
+		app.post('/api/admin/plugins/dbsearch/save', save);
+	};
+
 	var admin = {};
 	admin.menu = function(custom_header, callback) {
 		custom_header.plugins.push({
@@ -154,77 +205,6 @@ var winston = require('winston'),
 		});
 
 		return custom_header;
-	};
-
-	admin.route = function(custom_routes, callback) {
-
-		fs.readFile(path.join(__dirname, 'public/templates/admin.tpl'), function(err, tpl) {
-
-			custom_routes.routes.push({
-				route: '/plugins/dbsearch',
-				method: 'get',
-				options: function(req, res, callback) {
-
-					db.getObject('nodebb-plugin-dbsearch', function(err, data) {
-						if (!data) {
-							data = {
-								topicLimit: defaultTopicLimit,
-								postLimit: defaultPostLimit
-							};
-						}
-						var newTpl = templates.prepare(tpl.toString()).parse(data);
-
-						callback({
-							req: req,
-							res: res,
-							route: '/plugins/dbsearch',
-							name: 'DB Search',
-							content: newTpl
-						});
-					});
-				}
-			});
-
-			custom_routes.api.push({
-				route: '/plugins/dbsearch/reindex',
-				method: 'post',
-				callback: function(req, res, callback) {
-					search.reindex(function(err) {
-						if(err) {
-							return res.json(500, 'failed to reindex');
-						}
-
-						res.json('Content reindexed');
-					});
-				}
-			});
-
-			custom_routes.api.push({
-				route: '/plugins/dbsearch/save',
-				method: 'post',
-				callback: function(req, res, callback) {
-					if(utils.isNumber(req.body.postLimit) && utils.isNumber(req.body.topicLimit)) {
-						var data = {
-							postLimit: req.body.postLimit,
-							topicLimit: req.body.topicLimit
-						};
-
-						db.setObject('nodebb-plugin-dbsearch', data, function(err) {
-							if (err) {
-								return res.json(500, 'error-saving');
-							}
-
-							postLimit = data.postLimit;
-							topicLimit = data.topicLimit;
-
-							res.json('Settings saved!');
-						});
-					}
-				}
-			});
-
-			callback(null, custom_routes);
-		});
 	};
 
 	search.admin = admin;
