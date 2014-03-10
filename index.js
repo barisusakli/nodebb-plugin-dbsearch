@@ -1,15 +1,12 @@
 'use strict';
 
 var winston = require('winston'),
-	fs = require('fs'),
-	path = require('path'),
 	async = require('async'),
-
 	db = module.parent.require('./database'),
 	topics = module.parent.require('./topics'),
 	posts = module.parent.require('./posts'),
-	utils = module.parent.require('./../public/src/utils'),
-	templates = module.parent.require('./../public/src/templates');
+	utils = module.parent.require('./../public/src/utils');
+
 
 (function(search) {
 	var defaultPostLimit = 50,
@@ -147,6 +144,10 @@ var winston = require('winston'),
 
 	function renderAdmin(req, res, next) {
 		db.getObject('nodebb-plugin-dbsearch', function(err, data) {
+			if (err) {
+				return next(err);
+			}
+
 			if (!data) {
 				data = {
 					topicLimit: defaultTopicLimit,
@@ -197,7 +198,7 @@ var winston = require('winston'),
 	};
 
 	var admin = {};
-	admin.menu = function(custom_header, callback) {
+	admin.menu = function(custom_header) {
 		custom_header.plugins.push({
 			route: '/plugins/dbsearch',
 			icon: 'fa-search',
