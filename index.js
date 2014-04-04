@@ -198,14 +198,14 @@ var winston = require('winston'),
 	};
 
 	var admin = {};
-	admin.menu = function(custom_header) {
+	admin.menu = function(custom_header, callback) {
 		custom_header.plugins.push({
 			route: '/plugins/dbsearch',
 			icon: 'fa-search',
 			name: 'DB Search'
 		});
 
-		return custom_header;
+		callback(null, custom_header);
 	};
 
 	search.admin = admin;

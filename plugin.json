@@ -9,8 +9,8 @@
     },
     "hooks": [
 
-        { "hook": "action:app.load", "method": "init", "callbacked": true },
-        { "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false },
+        { "hook": "action:app.load", "method": "init"},
+        { "hook": "filter:admin.header.build", "method": "admin.menu"},
 
         { "hook": "action:post.save", "method": "postSave"},
         { "hook": "action:post.delete", "method": "postDelete"},
@@ -22,7 +22,7 @@
         { "hook": "action:topic.restore", "method": "topicRestore"},
         { "hook": "action:topic.edit", "method": "topicEdit"},
 
-        { "hook": "filter:search.query", "method": "searchQuery", "callbacked": true}
+        { "hook": "filter:search.query", "method": "searchQuery"}
     ],
     "minver": "0.4.0",
     "templates": "./public/templates"
