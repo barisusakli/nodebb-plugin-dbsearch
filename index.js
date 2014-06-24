@@ -76,11 +76,12 @@ var winston = require('winston'),
 				return callback(err);
 			}
 
-			async.each(tids, search.reIndexTopic, callback);
+			async.eachLimit(tids, 10, search.reIndexTopic, callback);
 		});
 	};
 
 	search.reIndexTopic = function(tid, callback) {
+		winston.info('reindexing tid', tid);
 		async.parallel([
 			function (next) {
 				search.reIndexTopicTitle(tid, next);
@@ -98,33 +99,28 @@ var winston = require('winston'),
 	};
 
 	search.reIndexTopicTitle = function(tid, callback) {
+		callback = callback || function() {};
 		if (!tid) {
-			if (typeof callback === 'function') {
-				return callback(new Error('invalid-tid'));
-			}
+			return callback(new Error('invalid-tid'));
 		}
 
 		topics.getTopicField(tid, 'title', function(err, title) {
 			if (err) {
-				if (typeof callback === 'function') {
-					return callback(err);
-				}
+				return callback(err);
 			}
 
 			db.searchRemove('topic', tid, function() {
-				if (typeof title === 'string' && title.length) {
-					db.searchIndex('topic', title, tid);
+				if (title) {
+					return db.searchIndex('topic', title, tid, callback);
 				}
 
-				if (typeof callback === 'function') {
-					callback();
-				}
+				callback();
 			});
 		});
 	};
 
 	search.reIndexPids = function(pids, callback) {
-		async.each(pids, search.reIndexPid, callback);
+		async.eachLimit(pids, 10, search.reIndexPid, callback);
 	};
 
 	search.reIndexPid = function(pid, callback) {
@@ -134,8 +130,8 @@ var winston = require('winston'),
 			}
 
 			db.searchRemove('post', pid, function() {
-				if (typeof content === 'string' && content.length) {
-					db.searchIndex('post', content, pid);
+				if (content) {
+					return db.searchIndex('post', content, pid, callback);
 				}
 				callback();
 			});
@@ -160,11 +156,12 @@ var winston = require('winston'),
 	}
 
 	function reindex(req, res, next) {
+		var start = process.hrtime();
 		search.reindex(function(err) {
 			if(err) {
 				return res.json(500, 'failed to reindex');
 			}
-
+			process.profile('reindex' , start);
 			res.json('Content reindexed');
 		});
 	}
