@@ -32,7 +32,7 @@ var winston = require('winston'),
 	};
 
 	search.postDelete = function (pid) {
-		if(pid) {
+		if (pid) {
 			db.searchRemove('post', pid);
 		}
 	};
@@ -51,6 +51,21 @@ var winston = require('winston'),
 
 	search.topicDelete = function(tid) {
 		db.searchRemove('topic', tid);
+		async.parallel({
+			mainPid: function (next) {
+				topics.getTopicField(tid, 'mainPid', next);
+			},
+			pids: function (next) {
+				topics.getPids(tid, next);
+			}
+		}, function(err, results) {
+			if (!err) {
+				search.postDelete(results.mainPid);
+				for(var i=0; i<results.pids.length; ++i) {
+					search.postDelete(results.pids[i]);
+				}
+			}
+		});
 	};
 
 	search.topicRestore = function(tid) {
