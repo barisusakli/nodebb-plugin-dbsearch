@@ -51,18 +51,10 @@ var winston = require('winston'),
 
 	search.topicDelete = function(tid) {
 		db.searchRemove('topic', tid);
-		async.parallel({
-			mainPid: function (next) {
-				topics.getTopicField(tid, 'mainPid', next);
-			},
-			pids: function (next) {
-				topics.getPids(tid, next);
-			}
-		}, function(err, results) {
+		topics.getPids(tid, function(err, pids) {
 			if (!err) {
-				search.postDelete(results.mainPid);
-				for(var i=0; i<results.pids.length; ++i) {
-					search.postDelete(results.pids[i]);
+				for(var i=0; i<pids.length; ++i) {
+					search.postDelete(pids[i]);
 				}
 			}
 		});
