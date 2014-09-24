@@ -26,11 +26,11 @@ var winston = require('winston'),
 	});
 
 	search.init = function(app, middleware, controllers, callback) {
-		app.get('/admin/plugins/dbsearch', middleware.admin.buildHeader, renderAdmin);
-		app.get('/api/admin/plugins/dbsearch', renderAdmin);
+		app.get('/admin/plugins/dbsearch', middleware.applyCSRF, middleware.admin.buildHeader, renderAdmin);
+		app.get('/api/admin/plugins/dbsearch', middleware.applyCSRF, renderAdmin);
 
-		app.post('/api/admin/plugins/dbsearch/reindex', reindex);
-		app.post('/api/admin/plugins/dbsearch/save', save);
+		app.post('/api/admin/plugins/dbsearch/reindex', middleware.applyCSRF, reindex);
+		app.post('/api/admin/plugins/dbsearch/save', middleware.applyCSRF, save);
 		callback();
 	};
 
@@ -166,7 +166,7 @@ var winston = require('winston'),
 					postLimit: defaultPostLimit
 				};
 			}
-
+			data.csrf = req.csrfToken();
 			res.render('admin/plugins/dbsearch', data);
 		});
 	}

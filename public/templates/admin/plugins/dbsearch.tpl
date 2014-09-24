@@ -17,10 +17,11 @@
 <button class="btn btn-primary" id="save">Save</button>
 <button class="btn btn-warning" id="reindex">Re Index</button>
 
+<input id="csrf_token" type="hidden" value="{csrf}" />
+
 <script type="text/javascript">
 
 	$('#save').on('click', function() {
-
 		$.post('/api/admin/plugins/dbsearch/save', {
 			_csrf : $('#csrf_token').val(),
 			topicLimit: $('#topicLimit').val(),
