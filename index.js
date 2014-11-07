@@ -5,7 +5,7 @@ var winston = require('winston'),
 	db = module.parent.require('./database'),
 	topics = module.parent.require('./topics'),
 	posts = module.parent.require('./posts'),
-	utils = module.parent.require('./../public/src/utils');
+	utils = module.parent.require('../public/src/utils');
 
 
 (function(search) {
@@ -35,14 +35,8 @@ var winston = require('winston'),
 	};
 
 	search.postSave = function (postData) {
-		if(postData && postData.pid && postData.content) {
+		if (postData && postData.pid && postData.content) {
 			db.searchIndex('post', postData.content, postData.pid);
-		}
-	};
-
-	search.postDelete = function (pid) {
-		if (pid) {
-			db.searchRemove('post', pid);
 		}
 	};
 
@@ -54,27 +48,36 @@ var winston = require('winston'),
 		search.postSave(postData);
 	};
 
-	search.topicSave = function(tid) {
-		search.reIndexTopicTitle(tid);
+	search.postDelete = function (pid) {
+		if (pid) {
+			db.searchRemove('post', pid);
+		}
+	};
+
+	search.topicSave = function(topicData) {
+		if (topicData && topicData.tid && topicData.title) {
+			db.searchIndex('topic', topicData.title, topicData.tid);
+		}
+	};
+
+	search.topicRestore = function(topicData) {
+		search.topicSave(topicData);
+	};
+
+	search.topicEdit = function(topicData) {
+		search.topicSave(topicData);
 	};
 
 	search.topicDelete = function(tid) {
 		db.searchRemove('topic', tid);
 		topics.getPids(tid, function(err, pids) {
 			if (!err) {
-				for(var i=0; i<pids.length; ++i) {
-					search.postDelete(pids[i]);
-				}
+				async.eachLimit(pids, 50, function(pid, next) {
+					search.postDelete(pid);
+					next();
+				});
 			}
 		});
-	};
-
-	search.topicRestore = function(tid) {
-		search.reIndexTopicTitle(tid);
-	};
-
-	search.topicEdit = function(tid) {
-		search.reIndexTopicTitle(tid);
 	};
 
 	search.searchQuery = function(data, callback) {
@@ -119,12 +122,10 @@ var winston = require('winston'),
 		if (!tid) {
 			return callback(new Error('invalid-tid'));
 		}
-
 		topics.getTopicField(tid, 'title', function(err, title) {
 			if (err) {
-				return callback(err);
+				return next(err);
 			}
-
 			db.searchRemove('topic', tid, function() {
 				if (title) {
 					return db.searchIndex('topic', title, tid, callback);

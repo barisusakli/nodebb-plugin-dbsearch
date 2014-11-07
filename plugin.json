@@ -13,14 +13,14 @@
         { "hook": "filter:admin.header.build", "method": "admin.menu"},
 
         { "hook": "action:post.save", "method": "postSave"},
-        { "hook": "action:post.delete", "method": "postDelete"},
         { "hook": "action:post.restore", "method": "postRestore"},
         { "hook": "action:post.edit", "method": "postEdit"},
+        { "hook": "action:post.delete", "method": "postDelete"},
 
         { "hook": "action:topic.save", "method": "topicSave"},
-        { "hook": "action:topic.delete", "method": "topicDelete"},
         { "hook": "action:topic.restore", "method": "topicRestore"},
         { "hook": "action:topic.edit", "method": "topicEdit"},
+        { "hook": "action:topic.delete", "method": "topicDelete"},
 
         { "hook": "filter:search.query", "method": "searchQuery"}
     ],
