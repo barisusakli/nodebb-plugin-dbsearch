@@ -25,12 +25,12 @@ var winston = require('winston'),
 		}
 	});
 
-	search.init = function(app, middleware, controllers, callback) {
-		app.get('/admin/plugins/dbsearch', middleware.applyCSRF, middleware.admin.buildHeader, renderAdmin);
-		app.get('/api/admin/plugins/dbsearch', middleware.applyCSRF, renderAdmin);
+	search.init = function(params, callback) {
+		params.router.get('/admin/plugins/dbsearch', params.middleware.applyCSRF, params.middleware.admin.buildHeader, renderAdmin);
+		params.router.get('/api/admin/plugins/dbsearch', params.middleware.applyCSRF, renderAdmin);
 
-		app.post('/api/admin/plugins/dbsearch/reindex', middleware.applyCSRF, reindex);
-		app.post('/api/admin/plugins/dbsearch/save', middleware.applyCSRF, save);
+		params.router.post('/api/admin/plugins/dbsearch/reindex', params.middleware.applyCSRF, reindex);
+		params.router.post('/api/admin/plugins/dbsearch/save', params.middleware.applyCSRF, save);
 		callback();
 	};
 
