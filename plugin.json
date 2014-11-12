@@ -24,6 +24,5 @@
 
         { "hook": "filter:search.query", "method": "searchQuery"}
     ],
-    "minver": "0.4.0",
     "templates": "./public/templates"
 }
