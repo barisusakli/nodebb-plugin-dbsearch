@@ -19,5 +19,8 @@
   },
   "peerDependencies": {
     "reds": "~0.2.4"
+  },
+  "nbbpm": {
+    "compatibility": "^0.6.0"
   }
 }
