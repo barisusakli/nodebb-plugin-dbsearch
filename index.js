@@ -61,7 +61,7 @@ var winston = require('winston'),
 	};
 
 	search.topicRestore = function(topicData) {
-		search.topicSave(topicData);
+		search.reIndexTopic(topicData.tid);
 	};
 
 	search.topicEdit = function(topicData) {
