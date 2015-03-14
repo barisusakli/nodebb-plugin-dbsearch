@@ -5,14 +5,17 @@ var winston = require('winston'),
 	db = module.parent.require('./database'),
 	topics = module.parent.require('./topics'),
 	posts = module.parent.require('./posts'),
-	utils = module.parent.require('../public/src/utils');
-
+	utils = module.parent.require('../public/src/utils'),
+	socketPlugins = module.parent.require('./socket.io/plugins');
 
 (function(search) {
 	var defaultPostLimit = 50,
 		defaultTopicLimit = 50,
 		postLimit = defaultPostLimit,
 		topicLimit = defaultTopicLimit;
+
+	var topicCount = 0,
+		topicsIndexed = 0;
 
 	db.getObject('nodebb-plugin-dbsearch', function(err, data) {
 		if (err) {
@@ -29,7 +32,6 @@ var winston = require('winston'),
 		params.router.get('/admin/plugins/dbsearch', params.middleware.applyCSRF, params.middleware.admin.buildHeader, renderAdmin);
 		params.router.get('/api/admin/plugins/dbsearch', params.middleware.applyCSRF, renderAdmin);
 
-		params.router.post('/api/admin/plugins/dbsearch/reindex', params.middleware.applyCSRF, reindex);
 		params.router.post('/api/admin/plugins/dbsearch/save', params.middleware.applyCSRF, save);
 		callback();
 	};
@@ -48,10 +50,8 @@ var winston = require('winston'),
 		search.postSave(postData);
 	};
 
-	search.postDelete = function (pid) {
-		if (pid) {
-			db.searchRemove('post', pid);
-		}
+	search.postDelete = function (pid, callback) {
+		db.searchRemove('post', pid, callback);
 	};
 
 	search.topicSave = function(topicData) {
@@ -68,20 +68,24 @@ var winston = require('winston'),
 		search.topicSave(topicData);
 	};
 
-	search.topicDelete = function(tid) {
-		db.searchRemove('topic', tid);
-		topics.getPids(tid, function(err, pids) {
-			if (!err) {
-				async.eachLimit(pids, 50, function(pid, next) {
-					search.postDelete(pid);
-					next();
-				});
+	search.topicDelete = function(tid, callback) {
+		db.searchRemove('topic', tid, function(err) {
+			if (err) {
+				return callback(err);
 			}
+
+			topics.getPids(tid, function(err, pids) {
+				if (err) {
+					return callback(err);
+				}
+
+				async.eachLimit(pids, 50, search.postDelete, callback);
+			});
 		});
 	};
 
 	search.searchQuery = function(data, callback) {
-		if(data && data.index && data.query) {
+		if (data && data.index && data.query) {
 			var limit = data.index === 'post' ? postLimit : topicLimit;
 			db.search(data.index, data.query, limit, callback);
 		} else {
@@ -90,17 +94,45 @@ var winston = require('winston'),
 	};
 
 	search.reindex = function(callback) {
+		topicsIndexed = 0;
 		db.getSortedSetRange('topics:tid', 0, -1, function(err, tids) {
 			if (err) {
 				return callback(err);
 			}
+			topicCount = tids.length;
+			async.eachLimit(tids, 20, function(tid, next) {
+				search.reIndexTopic(tid, function(err) {
+					if (err) {
+						return next(err);
+					}
+					++topicsIndexed;
+					next();
+				});
+			}, callback);
+		});
+	};
 
-			async.eachLimit(tids, 10, search.reIndexTopic, callback);
+	search.clearIndex = function(callback) {
+		topicsIndexed = 0;
+
+		db.getSortedSetRange('topics:tid', 0, -1, function(err, tids) {
+			if (err) {
+				return callback(err);
+			}
+			topicCount = tids.length;
+			async.eachLimit(tids, 50, function(tid, next) {
+				search.topicDelete(tid, function(err) {
+					if (err) {
+						return next(err);
+					}
+					++topicsIndexed;
+					next();
+				});
+			}, callback);
 		});
 	};
 
 	search.reIndexTopic = function(tid, callback) {
-		winston.info('reindexing tid', tid);
 		async.parallel([
 			function (next) {
 				search.reIndexTopicTitle(tid, next);
@@ -124,9 +156,13 @@ var winston = require('winston'),
 		}
 		topics.getTopicField(tid, 'title', function(err, title) {
 			if (err) {
-				return next(err);
+				return callback(err);
 			}
-			db.searchRemove('topic', tid, function() {
+			db.searchRemove('topic', tid, function(err) {
+				if (err) {
+					return callback(err);
+				}
+
 				if (title) {
 					return db.searchIndex('topic', title, tid, callback);
 				}
@@ -137,7 +173,7 @@ var winston = require('winston'),
 	};
 
 	search.reIndexPids = function(pids, callback) {
-		async.eachLimit(pids, 10, search.reIndexPid, callback);
+		async.eachLimit(pids, 20, search.reIndexPid, callback);
 	};
 
 	search.reIndexPid = function(pid, callback) {
@@ -172,19 +208,8 @@ var winston = require('winston'),
 		});
 	}
 
-	function reindex(req, res, next) {
-		var start = process.hrtime();
-		search.reindex(function(err) {
-			if(err) {
-				return res.json(500, 'failed to reindex');
-			}
-			process.profile('reindex' , start);
-			res.json('Content reindexed');
-		});
-	}
-
 	function save(req, res, next) {
-		if(utils.isNumber(req.body.postLimit) && utils.isNumber(req.body.topicLimit)) {
+		if (utils.isNumber(req.body.postLimit) && utils.isNumber(req.body.topicLimit)) {
 			var data = {
 				postLimit: req.body.postLimit,
 				topicLimit: req.body.topicLimit
@@ -202,6 +227,22 @@ var winston = require('winston'),
 			});
 		}
 	}
+
+	socketPlugins.dbsearch = {};
+	socketPlugins.dbsearch.checkProgress = function(socket, data, callback) {
+		if (!parseInt(topicCount, 10)) {
+			return callback(null, 100);
+		}
+		callback(null, Math.min(100, ((topicsIndexed / topicCount) * 100).toFixed(2)));
+	};
+
+	socketPlugins.dbsearch.reindex = function(socket, data, callback) {
+		search.reindex(callback);
+	};
+
+	socketPlugins.dbsearch.clearIndex = function(socket, data, callback) {
+		search.clearIndex(callback);
+	};
 
 	var admin = {};
 	admin.menu = function(custom_header, callback) {
