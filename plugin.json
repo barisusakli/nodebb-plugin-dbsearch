@@ -16,11 +16,13 @@
         { "hook": "action:post.restore", "method": "postRestore"},
         { "hook": "action:post.edit", "method": "postEdit"},
         { "hook": "action:post.delete", "method": "postDelete"},
+        { "hook": "action:post.move", "method": "postMove"},
 
         { "hook": "action:topic.save", "method": "topicSave"},
         { "hook": "action:topic.restore", "method": "topicRestore"},
         { "hook": "action:topic.edit", "method": "topicEdit"},
         { "hook": "action:topic.delete", "method": "topicDelete"},
+        { "hook": "action:topic.move", "method": "topicMove"},
 
         { "hook": "filter:search.query", "method": "searchQuery"}
     ],

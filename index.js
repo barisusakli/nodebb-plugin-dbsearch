@@ -36,28 +36,63 @@ var winston = require('winston'),
 		callback();
 	};
 
-	search.postSave = function (postData) {
-		if (postData && postData.pid && postData.content) {
-			db.searchIndex('post', postData.content, postData.pid);
+	search.postSave = function(postData, callback) {
+		callback = callback || function() {};
+		if (!postData || !postData.pid) {
+			return callback();
 		}
+		var data = {};
+		if (postData.content) {
+			data.content = postData.content;
+		}
+		if (postData.cid) {
+			data.cid = postData.cid;
+		}
+		if (postData.uid) {
+			data.uid = postData.uid;
+		}
+		if (!Object.keys(data).length) {
+			return;
+		}
+		db.searchIndex('post', data, postData.pid, callback);
 	};
 
-	search.postRestore = function (postData) {
+	search.postRestore = function(postData) {
 		search.postSave(postData);
 	};
 
-	search.postEdit = function (postData) {
+	search.postEdit = function(postData) {
 		search.postSave(postData);
 	};
 
-	search.postDelete = function (pid, callback) {
+	search.postDelete = function(pid, callback) {
 		db.searchRemove('post', pid, callback);
 	};
 
-	search.topicSave = function(topicData) {
-		if (topicData && topicData.tid && topicData.title) {
-			db.searchIndex('topic', topicData.title, topicData.tid);
+	search.postMove = function(postData) {
+		// TODO
+	};
+
+	search.topicSave = function(topicData, callback) {
+
+		callback = callback || function() {};
+		if (!topicData || !topicData.tid) {
+			return callback();
 		}
+		var data = {};
+		if (topicData.title) {
+			data.content = topicData.title;
+		}
+		if (topicData.cid) {
+			data.cid = topicData.cid;
+		}
+		if (topicData.uid) {
+			data.uid = topicData.uid;
+		}
+		if (!Object.keys(data).length) {
+			return;
+		}
+		db.searchIndex('topic', data, topicData.tid, callback);
 	};
 
 	search.topicRestore = function(topicData) {
@@ -84,13 +119,30 @@ var winston = require('winston'),
 		});
 	};
 
+	search.topicMove = function(topicData) {
+		// TODO
+	};
+
 	search.searchQuery = function(data, callback) {
-		if (data && data.index && data.query) {
-			var limit = data.index === 'post' ? postLimit : topicLimit;
-			db.search(data.index, data.query, limit, callback);
-		} else {
-			callback(null, []);
+		console.log('in db search', data);
+		if (!data || !data.index) {
+			return callback(null, []);
 		}
+		var limit = data.index === 'post' ? postLimit : topicLimit;
+		var query = {};
+		if (data.cid) {
+			query.cid = data.cid;
+		}
+		if (data.uid) {
+			query.uid = data.uid;
+		}
+		if (data.content) {
+			query.content = data.content;
+		}
+		if (!Object.keys(query).length) {
+			return callback(null, []);
+		}
+		db.search(data.index, query, limit, callback);
 	};
 
 	search.reindex = function(callback) {
@@ -135,7 +187,7 @@ var winston = require('winston'),
 	search.reIndexTopic = function(tid, callback) {
 		async.parallel([
 			function (next) {
-				search.reIndexTopicTitle(tid, next);
+				search.reIndexTopicData(tid, next);
 			},
 			function (next) {
 				topics.getPids(tid, function(err, pids) {
@@ -149,27 +201,25 @@ var winston = require('winston'),
 		], callback);
 	};
 
-	search.reIndexTopicTitle = function(tid, callback) {
+	search.reIndexTopicData = function(tid, callback) {
 		callback = callback || function() {};
 		if (!tid) {
 			return callback(new Error('invalid-tid'));
 		}
-		topics.getTopicField(tid, 'title', function(err, title) {
-			if (err) {
-				return callback(err);
+		var topicData;
+		async.waterfall([
+			function(next) {
+				topics.getTopicFields(tid, ['title', 'uid', 'cid'], next);
+			},
+			function(_topicData, next) {
+				topicData = _topicData;
+				db.searchRemove('topic', tid, next);
+			},
+			function(next) {
+				topicData.tid = tid;
+				search.topicSave(topicData, next);
 			}
-			db.searchRemove('topic', tid, function(err) {
-				if (err) {
-					return callback(err);
-				}
-
-				if (title) {
-					return db.searchIndex('topic', title, tid, callback);
-				}
-
-				callback();
-			});
-		});
+		], callback);
 	};
 
 	search.reIndexPids = function(pids, callback) {
@@ -177,18 +227,23 @@ var winston = require('winston'),
 	};
 
 	search.reIndexPid = function(pid, callback) {
-		posts.getPostField(pid, 'content', function(err, content) {
-			if (err) {
-				return callback(err);
+		var post;
+		async.waterfall([
+			function(next) {
+				posts.getPostFields(pid, ['content', 'uid', 'tid'], next);
+			},
+			function(_post, next) {
+				post = _post;
+				topics.getTopicField(_post.tid, 'cid', next);
+			},
+			function(cid, next) {
+				post.cid = cid;
+				db.searchRemove('post', pid, next);
+			},
+			function(next) {
+				search.postSave(post, next);
 			}
-
-			db.searchRemove('post', pid, function() {
-				if (content) {
-					return db.searchIndex('post', content, pid, callback);
-				}
-				callback();
-			});
-		});
+		], callback);
 	};
 
 	function renderAdmin(req, res, next) {
