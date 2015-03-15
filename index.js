@@ -124,7 +124,6 @@ var winston = require('winston'),
 	};
 
 	search.searchQuery = function(data, callback) {
-		console.log('in db search', data);
 		if (!data || !data.index) {
 			return callback(null, []);
 		}
