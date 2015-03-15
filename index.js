@@ -119,8 +119,8 @@ var winston = require('winston'),
 		});
 	};
 
-	search.topicMove = function(topicData) {
-		// TODO
+	search.topicMove = function(data) {
+		search.reindexTopic(data.tid);
 	};
 
 	search.searchQuery = function(data, callback) {
