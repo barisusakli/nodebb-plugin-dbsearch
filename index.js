@@ -54,6 +54,7 @@ var winston = require('winston'),
 		if (!Object.keys(data).length) {
 			return;
 		}
+
 		db.searchIndex('post', data, postData.pid, callback);
 	};
 
@@ -69,13 +70,13 @@ var winston = require('winston'),
 		db.searchRemove('post', pid, callback);
 	};
 
-	search.postMove = function(postData) {
-		// TODO
+	search.postMove = function(data) {
+		search.reIndexPid(data.post.pid);
 	};
 
 	search.topicSave = function(topicData, callback) {
-
 		callback = callback || function() {};
+
 		if (!topicData || !topicData.tid) {
 			return callback();
 		}
@@ -92,6 +93,7 @@ var winston = require('winston'),
 		if (!Object.keys(data).length) {
 			return;
 		}
+
 		db.searchIndex('topic', data, topicData.tid, callback);
 	};
 
