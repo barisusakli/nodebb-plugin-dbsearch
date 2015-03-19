@@ -18,7 +18,7 @@
     "winston": "~0.8.0"
   },
   "peerDependencies": {
-    "redis-search": "^0.0.1"
+    "redisearch": "^0.0.1"
   },
   "nbbpm": {
     "compatibility": "^0.7.0"
