@@ -62,7 +62,7 @@ $(document).ready(function() {
 	}
 
 	$('#save').on('click', function() {
-		$.post('/api/admin/plugins/dbsearch/save', {
+		$.post(config.relative_path + '/api/admin/plugins/dbsearch/save', {
 			_csrf : $('#csrf_token').val(),
 			topicLimit: $('#topicLimit').val(),
 			postLimit : $('#postLimit').val()

@@ -17,23 +17,23 @@ var winston = require('winston'),
 	var topicCount = 0,
 		topicsIndexed = 0;
 
-	db.getObject('nodebb-plugin-dbsearch', function(err, data) {
-		if (err) {
-			return winston.error(err.error);
-		}
-
-		if (data) {
-			postLimit = data.postLimit ? data.postLimit : defaultPostLimit;
-			topicLimit = data.topicLimit ? data.topicLimit : defaultTopicLimit;
-		}
-	});
-
 	search.init = function(params, callback) {
 		params.router.get('/admin/plugins/dbsearch', params.middleware.applyCSRF, params.middleware.admin.buildHeader, renderAdmin);
 		params.router.get('/api/admin/plugins/dbsearch', params.middleware.applyCSRF, renderAdmin);
 
 		params.router.post('/api/admin/plugins/dbsearch/save', params.middleware.applyCSRF, save);
 		callback();
+
+		db.getObject('nodebb-plugin-dbsearch', function(err, data) {
+			if (err) {
+				return winston.error(err.error);
+			}
+
+			if (data) {
+				postLimit = data.postLimit ? data.postLimit : defaultPostLimit;
+				topicLimit = data.topicLimit ? data.topicLimit : defaultTopicLimit;
+			}
+		});
 	};
 
 	search.postSave = function(postData, callback) {
