@@ -122,7 +122,7 @@ var winston = require('winston'),
 	};
 
 	search.topicMove = function(data) {
-		search.reindexTopic(data.tid);
+		search.reIndexTopic(data.tid);
 	};
 
 	search.searchQuery = function(data, callback) {
