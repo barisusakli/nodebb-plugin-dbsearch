@@ -205,7 +205,8 @@ var winston = require('winston'),
 	search.reIndexTopicData = function(tid, callback) {
 		callback = callback || function() {};
 		if (!tid) {
-			return callback(new Error('invalid-tid'));
+			winston.warn('[nodebb-plugin-dbsearch] invalid-tid, skipping')
+			return callback();
 		}
 		var topicData;
 		async.waterfall([
@@ -228,6 +229,10 @@ var winston = require('winston'),
 	};
 
 	search.reIndexPid = function(pid, callback) {
+		if (!pid) {
+			winston.warn('[nodebb-plugin-dbsearch] invalid-pid, skipping')
+			return callback();
+		}
 		var post;
 		async.waterfall([
 			function(next) {
