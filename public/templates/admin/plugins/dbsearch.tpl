@@ -43,6 +43,7 @@ $(document).ready(function() {
 					clearProgress();
 					return app.alertError(err.message);
 				}
+
 				if (progress >= 100) {
 					clearInterval(intervalId);
 					progress = 100;
