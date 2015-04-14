@@ -242,6 +242,11 @@ var winston = require('winston'),
 	};
 
 	search.reIndexPid = function(pid, topic, callback) {
+		if (!pid) {
+			winston.warn('[nodebb-plugin-dbsearch] invalid-pid, skipping')
+			return callback();
+		}
+
 		async.waterfall([
 			function(next) {
 				db.searchRemove('post', pid, next);
