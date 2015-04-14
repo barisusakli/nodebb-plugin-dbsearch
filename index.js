@@ -52,7 +52,7 @@ var winston = require('winston'),
 			data.uid = postData.uid;
 		}
 		if (!Object.keys(data).length) {
-			return;
+			return callback();
 		}
 
 		db.searchIndex('post', data, postData.pid, callback);
@@ -71,7 +71,12 @@ var winston = require('winston'),
 	};
 
 	search.postMove = function(data) {
-		search.reIndexPid(data.post.pid);
+		topics.getTopicFields(data.post.tid, ['cid', 'deleted'], function(err, topic) {
+			if (err) {
+				return;
+			}
+			search.reIndexPid(data.post.pid, topic);
+		});
 	};
 
 	search.topicSave = function(topicData, callback) {
@@ -91,7 +96,7 @@ var winston = require('winston'),
 			data.uid = topicData.uid;
 		}
 		if (!Object.keys(data).length) {
-			return;
+			return callback();
 		}
 
 		db.searchIndex('topic', data, topicData.tid, callback);
@@ -116,7 +121,7 @@ var winston = require('winston'),
 					return callback(err);
 				}
 
-				async.eachLimit(pids, 50, search.postDelete, callback);
+				async.eachLimit(pids, 100, search.postDelete, callback);
 			});
 		});
 	};
@@ -153,11 +158,12 @@ var winston = require('winston'),
 				return callback(err);
 			}
 			topicCount = tids.length;
-			async.eachLimit(tids, 20, function(tid, next) {
+			async.eachLimit(tids, 100, function(tid, next) {
 				search.reIndexTopic(tid, function(err) {
 					if (err) {
 						return next(err);
 					}
+
 					++topicsIndexed;
 					next();
 				});
@@ -173,7 +179,7 @@ var winston = require('winston'),
 				return callback(err);
 			}
 			topicCount = tids.length;
-			async.eachLimit(tids, 50, function(tid, next) {
+			async.eachLimit(tids, 100, function(tid, next) {
 				search.topicDelete(tid, function(err) {
 					if (err) {
 						return next(err);
@@ -186,62 +192,68 @@ var winston = require('winston'),
 	};
 
 	search.reIndexTopic = function(tid, callback) {
-		async.parallel([
-			function (next) {
-				search.reIndexTopicData(tid, next);
-			},
-			function (next) {
-				topics.getPids(tid, function(err, pids) {
-					if (err) {
-						return next(err);
-					}
+		topics.getTopicFields(tid, ['title', 'uid', 'cid', 'deleted'], function(err, topic) {
+			if (err) {
+				return callback(err);
+			}
 
-					search.reIndexPids(pids, next);
-				});
+			if (!tid) {
+				winston.warn('[nodebb-plugin-dbsearch] invalid tid, skipping');
+				return callback();
+			}
+
+			topic.tid = tid;
+
+			async.parallel([
+				function (next) {
+					search.reIndexTopicData(topic, next);
+				},
+				function (next) {
+					topics.getPids(tid, function(err, pids) {
+						if (err) {
+							return next(err);
+						}
+
+						search.reIndexPids(pids, topic, next);
+					});
+				}
+			], callback);
+		});
+	};
+
+	search.reIndexTopicData = function(topic, callback) {
+		async.waterfall([
+			function(next) {
+				db.searchRemove('topic', topic.tid, next);
+			},
+			function(next) {
+				if (parseInt(topic.deleted) === 1) {
+					return next();
+				}
+				search.topicSave(topic, next);
 			}
 		], callback);
 	};
 
-	search.reIndexTopicData = function(tid, callback) {
-		callback = callback || function() {};
-		if (!tid) {
-			return callback(new Error('invalid-tid'));
-		}
-		var topicData;
-		async.waterfall([
-			function(next) {
-				topics.getTopicFields(tid, ['title', 'uid', 'cid'], next);
-			},
-			function(_topicData, next) {
-				topicData = _topicData;
-				db.searchRemove('topic', tid, next);
-			},
-			function(next) {
-				topicData.tid = tid;
-				search.topicSave(topicData, next);
-			}
-		], callback);
+	search.reIndexPids = function(pids, topic, callback) {
+		async.eachLimit(pids, 100, function(pid, next) {
+			search.reIndexPid(pid, topic, next);
+		}, callback);
 	};
 
-	search.reIndexPids = function(pids, callback) {
-		async.eachLimit(pids, 20, search.reIndexPid, callback);
-	};
-
-	search.reIndexPid = function(pid, callback) {
-		var post;
+	search.reIndexPid = function(pid, topic, callback) {
 		async.waterfall([
 			function(next) {
-				posts.getPostFields(pid, ['content', 'uid', 'tid'], next);
-			},
-			function(_post, next) {
-				post = _post;
-				topics.getTopicField(_post.tid, 'cid', next);
-			},
-			function(cid, next) {
-				post.cid = cid;
 				db.searchRemove('post', pid, next);
 			},
 			function(next) {
+				if (parseInt(topic.deleted) === 1) {
+					return callback();
+				}
+				posts.getPostFields(pid, ['content', 'uid', 'tid'], next);
+			},
+			function(post, next) {
+				post.cid = topic.cid;
 				search.postSave(post, next);
 			}
 		], callback);
@@ -293,7 +305,14 @@ var winston = require('winston'),
 	};
 
 	socketPlugins.dbsearch.reindex = function(socket, data, callback) {
-		search.reindex(callback);
+		search.reindex(function(err) {
+			if (err) {
+				return callback(err);
+			}
+
+			topicsIndexed = topicCount;
+			callback();
+		});
 	};
 
 	socketPlugins.dbsearch.clearIndex = function(socket, data, callback) {
