@@ -6,7 +6,7 @@ var winston = require('winston'),
 	topics = module.parent.require('./topics'),
 	posts = module.parent.require('./posts'),
 	utils = module.parent.require('../public/src/utils'),
-	socketPlugins = module.parent.require('./socket.io/plugins');
+	socketAdmin = module.parent.require('./socket.io/admin');
 
 (function(search) {
 	var defaultPostLimit = 50,
@@ -301,15 +301,15 @@ var winston = require('winston'),
 		}
 	}
 
-	socketPlugins.dbsearch = {};
-	socketPlugins.dbsearch.checkProgress = function(socket, data, callback) {
+	socketAdmin.dbsearch = {};
+	socketAdmin.dbsearch.checkProgress = function(socket, data, callback) {
 		if (!parseInt(topicCount, 10)) {
 			return callback(null, 100);
 		}
 		callback(null, Math.min(100, ((topicsIndexed / topicCount) * 100).toFixed(2)));
 	};
 
-	socketPlugins.dbsearch.reindex = function(socket, data, callback) {
+	socketAdmin.dbsearch.reindex = function(socket, data, callback) {
 		search.reindex(function(err) {
 			if (err) {
 				return callback(err);
@@ -320,7 +320,7 @@ var winston = require('winston'),
 		});
 	};
 
-	socketPlugins.dbsearch.clearIndex = function(socket, data, callback) {
+	socketAdmin.dbsearch.clearIndex = function(socket, data, callback) {
 		search.clearIndex(callback);
 	};
 

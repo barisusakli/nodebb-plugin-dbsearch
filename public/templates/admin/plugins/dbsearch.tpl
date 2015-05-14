@@ -38,7 +38,7 @@ $(document).ready(function() {
 		clearProgress();
 
 		intervalId = setInterval(function() {
-			socket.emit('plugins.dbsearch.checkProgress', function(err, progress) {
+			socket.emit('admin.plugins.dbsearch.checkProgress', function(err, progress) {
 				if (err) {
 					clearProgress();
 					return app.alertError(err.message);
@@ -77,7 +77,7 @@ $(document).ready(function() {
 	});
 
 	$('#clear-index').on('click', function() {
-		socket.emit('plugins.dbsearch.clearIndex', function(err) {
+		socket.emit('admin.plugins.dbsearch.clearIndex', function(err) {
 			if (err) {
 				app.alertError(err.message);
 				clearProgress();
@@ -88,7 +88,7 @@ $(document).ready(function() {
 	});
 
 	$('#reindex').on('click', function() {
-		socket.emit('plugins.dbsearch.reindex', function(err) {
+		socket.emit('admin.plugins.dbsearch.reindex', function(err) {
 			if (err) {
 				app.alertError(err.message);
 				clearProgress();
