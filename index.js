@@ -301,15 +301,15 @@ var winston = require('winston'),
 		}
 	}
 
-	socketAdmin.dbsearch = {};
-	socketAdmin.dbsearch.checkProgress = function(socket, data, callback) {
+	socketAdmin.plugins.dbsearch = {};
+	socketAdmin.plugins.dbsearch.checkProgress = function(socket, data, callback) {
 		if (!parseInt(topicCount, 10)) {
 			return callback(null, 100);
 		}
 		callback(null, Math.min(100, ((topicsIndexed / topicCount) * 100).toFixed(2)));
 	};
 
-	socketAdmin.dbsearch.reindex = function(socket, data, callback) {
+	socketAdmin.plugins.dbsearch.reindex = function(socket, data, callback) {
 		search.reindex(function(err) {
 			if (err) {
 				return callback(err);
@@ -320,7 +320,7 @@ var winston = require('winston'),
 		});
 	};
 
-	socketAdmin.dbsearch.clearIndex = function(socket, data, callback) {
+	socketAdmin.plugins.dbsearch.clearIndex = function(socket, data, callback) {
 		search.clearIndex(callback);
 	};
 
