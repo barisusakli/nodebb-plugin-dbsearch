@@ -14,6 +14,8 @@ var winston = require('winston'),
 		postLimit = defaultPostLimit,
 		topicLimit = defaultTopicLimit;
 
+	var batchSize = 500;
+
 	var topicCount = 0,
 		topicsIndexed = 0;
 
@@ -75,7 +77,7 @@ var winston = require('winston'),
 			if (err) {
 				return;
 			}
-			search.reIndexPid(data.post.pid, topic);
+			search.reIndexPids([data.post.pid], topic);
 		});
 	};
 
@@ -103,7 +105,7 @@ var winston = require('winston'),
 	};
 
 	search.topicRestore = function(topicData) {
-		search.reIndexTopic(topicData.tid);
+		search.reIndexTopics([topicData.tid]);
 	};
 
 	search.topicEdit = function(topicData) {
@@ -111,23 +113,28 @@ var winston = require('winston'),
 	};
 
 	search.topicDelete = function(tid, callback) {
-		db.searchRemove('topic', tid, function(err) {
-			if (err) {
-				return callback(err);
+		async.parallel({
+			topic: function(next) {
+				db.searchRemove('topic', tid, next);
+			},
+			posts: function(next) {
+				topics.getPids(tid, function(err, pids) {
+					if (err) {
+						return next(err);
+					}
+					if (!Array.isArray(pids) || !pids.length) {
+						return next();
+					}
+					async.eachLimit(pids, batchSize, search.postDelete, next);
+				});
 			}
-
-			topics.getPids(tid, function(err, pids) {
-				if (err) {
-					return callback(err);
-				}
-
-				async.eachLimit(pids, 100, search.postDelete, callback);
-			});
+		}, function(err, results) {
+			callback(err);
 		});
 	};
 
 	search.topicMove = function(data) {
-		search.reIndexTopic(data.tid);
+		search.reIndexTopics([data.tid]);
 	};
 
 	search.searchQuery = function(data, callback) {
@@ -153,21 +160,20 @@ var winston = require('winston'),
 
 	search.reindex = function(callback) {
 		topicsIndexed = 0;
+		var st = process.hrtime();
 		db.getSortedSetRange('topics:tid', 0, -1, function(err, tids) {
 			if (err) {
 				return callback(err);
 			}
 			topicCount = tids.length;
-			async.eachLimit(tids, 100, function(tid, next) {
-				search.reIndexTopic(tid, function(err) {
-					if (err) {
-						return next(err);
-					}
 
-					++topicsIndexed;
-					next();
-				});
-			}, callback);
+			batch(tids, batchSize, function(currentTids, next) {
+				topicsIndexed += batchSize;
+				search.reIndexTopics(currentTids, next);
+			}, function(err) {
+				process.profile('reindex', st);
+				callback(err);
+			});
 		});
 	};
 
@@ -179,7 +185,7 @@ var winston = require('winston'),
 				return callback(err);
 			}
 			topicCount = tids.length;
-			async.eachLimit(tids, 100, function(tid, next) {
+			async.eachLimit(tids, 500, function(tid, next) {
 				search.topicDelete(tid, function(err) {
 					if (err) {
 						return next(err);
@@ -191,78 +197,102 @@ var winston = require('winston'),
 		});
 	};
 
-	search.reIndexTopic = function(tid, callback) {
-		topics.getTopicFields(tid, ['title', 'uid', 'cid', 'deleted'], function(err, topic) {
+	search.reIndexTopics = function(tids, callback) {
+		if (!Array.isArray(tids) || !tids.length) {
+			return callback();
+		}
+
+		topics.getTopicsFields(tids, ['tid', 'title', 'uid', 'cid', 'deleted'], function(err, topicData) {
 			if (err) {
 				return callback(err);
 			}
 
-			if (!tid) {
-				winston.warn('[nodebb-plugin-dbsearch] invalid tid, skipping');
-				return callback();
-			}
+			topicData = topicData.filter(function(topic) {
+				return parseInt(topic.tid, 10) && parseInt(topic.deleted, 10) !== 1;
+			});
 
-			topic.tid = tid;
+			async.each(topicData, function(topic, next) {
+				async.parallel([
+					function (next) {
+						search.reIndexTopicData(topic, next);
+					},
+					function (next) {
+						topics.getPids(topic.tid, function(err, pids) {
+							if (err) {
+								return next(err);
+							}
 
-			async.parallel([
-				function (next) {
-					search.reIndexTopicData(topic, next);
-				},
-				function (next) {
-					topics.getPids(tid, function(err, pids) {
-						if (err) {
-							return next(err);
-						}
-
-						search.reIndexPids(pids, topic, next);
-					});
-				}
-			], callback);
+							search.reIndexPids(pids, topic, next);
+						});
+					}
+				], next);
+			}, callback);
 		});
 	};
 
 	search.reIndexTopicData = function(topic, callback) {
-		async.waterfall([
-			function(next) {
-				db.searchRemove('topic', topic.tid, next);
-			},
-			function(next) {
-				if (parseInt(topic.deleted) === 1) {
-					return next();
-				}
-				search.topicSave(topic, next);
-			}
-		], callback);
+		if (parseInt(topic.deleted) === 1 || !parseInt(topic.tid, 10)) {
+			return callback();
+		}
+		search.topicSave(topic, callback);
 	};
 
 	search.reIndexPids = function(pids, topic, callback) {
-		async.eachLimit(pids, 100, function(pid, next) {
-			search.reIndexPid(pid, topic, next);
+		if (!Array.isArray(pids) || !pids.length) {
+			return callback();
+		}
+
+		batch(pids, batchSize, function(currentPids, next) {
+			reIndexPids(currentPids, topic, next);
 		}, callback);
 	};
 
-	search.reIndexPid = function(pid, topic, callback) {
-		if (!pid) {
-			winston.warn('[nodebb-plugin-dbsearch] invalid-pid, skipping')
+	function reIndexPids(pids, topic, callback) {
+		if (!Array.isArray(pids) || !pids.length) {
+			winston.warn('[nodebb-plugin-dbsearch] invalid-pid, skipping');
+			return callback();
+		}
+		if (parseInt(topic.deleted) === 1) {
 			return callback();
 		}
 
 		async.waterfall([
 			function(next) {
-				db.searchRemove('post', pid, next);
+				posts.getPostsFields(pids, ['pid', 'content', 'uid', 'tid'], next);
 			},
-			function(next) {
-				if (parseInt(topic.deleted) === 1) {
-					return callback();
-				}
-				posts.getPostFields(pid, ['content', 'uid', 'tid'], next);
-			},
-			function(post, next) {
-				post.cid = topic.cid;
-				search.postSave(post, next);
+			function(posts, next) {
+				async.each(posts, function(post, next) {
+					post.cid = topic.cid;
+					search.postSave(post, next);
+				}, next);
 			}
 		], callback);
-	};
+	}
+
+	function batch(array, count, iterator, callback) {
+		var start = 0;
+		var stop = count;
+		var currentBatch = array;
+		async.whilst(
+			function() {
+				return currentBatch.length > 0;
+			},
+			function(next) {
+				currentBatch = array.slice(start, stop);
+				if (!currentBatch.length) {
+					return next();
+				}
+
+				start = stop;
+				stop = start + count;
+
+				iterator(currentBatch, next);
+			},
+			function(err) {
+				callback(err);
+			}
+		);
+	}
 
 	function renderAdmin(req, res, next) {
 		db.getObject('nodebb-plugin-dbsearch', function(err, data) {

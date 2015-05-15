@@ -51,7 +51,7 @@ $(document).ready(function() {
 				}
 				$('.progress-bar').css('width', progress + '%').text(progress + '%');
 			});
-		}, 1000);
+		}, 750);
 	}
 
 	function clearProgress() {
