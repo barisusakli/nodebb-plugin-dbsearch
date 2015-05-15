@@ -160,7 +160,6 @@ var winston = require('winston'),
 
 	search.reindex = function(callback) {
 		topicsIndexed = 0;
-		var st = process.hrtime();
 		db.getSortedSetRange('topics:tid', 0, -1, function(err, tids) {
 			if (err) {
 				return callback(err);
@@ -171,7 +170,6 @@ var winston = require('winston'),
 				topicsIndexed += batchSize;
 				search.reIndexTopics(currentTids, next);
 			}, function(err) {
-				process.profile('reindex', st);
 				callback(err);
 			});
 		});
