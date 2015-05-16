@@ -113,6 +113,7 @@ var winston = require('winston'),
 	};
 
 	search.topicDelete = function(tid, callback) {
+		callback = callback || function() {};
 		async.parallel({
 			topic: function(next) {
 				db.searchRemove('topic', tid, next);
