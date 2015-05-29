@@ -237,6 +237,8 @@ var winston = require('winston'),
 	};
 
 	search.reIndexPids = function(pids, topic, callback) {
+		callback = callback || function() {};
+
 		if (!Array.isArray(pids) || !pids.length) {
 			return callback();
 		}
