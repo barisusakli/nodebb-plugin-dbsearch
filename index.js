@@ -113,13 +113,14 @@ var winston = require('winston'),
 	};
 
 	search.topicDelete = function(topicData, callback) {
+		var tid = (void 0 === topicData.tid) ? topicData : topicData.tid;
 		callback = callback || function() {};
 		async.parallel({
 			topic: function(next) {
-				db.searchRemove('topic', topicData.tid, next);
+				db.searchRemove('topic', tid, next);
 			},
 			posts: function(next) {
-				topics.getPids(topicData.tid, function(err, pids) {
+				topics.getPids(tid, function(err, pids) {
 					if (err) {
 						return next(err);
 					}
