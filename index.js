@@ -146,10 +146,10 @@ var winston = require('winston'),
 		var limit = data.index === 'post' ? postLimit : topicLimit;
 		var query = {};
 		if (data.cid) {
-			query.cid = data.cid;
+			query.cid = data.cid.filter(Boolean);
 		}
 		if (data.uid) {
-			query.uid = data.uid;
+			query.uid = data.uid.filter(Boolean);
 		}
 		if (data.content) {
 			query.content = data.content;
