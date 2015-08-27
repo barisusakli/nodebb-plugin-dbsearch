@@ -25,6 +25,6 @@
     "redisearch": "^0.0.4"
   },
   "nbbpm": {
-    "compatibility": "^0.7.0"
+    "compatibility": "^0.7.0 || ^0.8.0"
   }
 }
