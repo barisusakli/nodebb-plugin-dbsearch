@@ -1,7 +1,7 @@
 'use strict';
 
-var winston = require('winston'),
-	async = require('async'),
+var winston = require.main.require('winston'),
+	async = require.main.require('async'),
 	db = module.parent.require('./database'),
 	topics = module.parent.require('./topics'),
 	posts = module.parent.require('./posts'),

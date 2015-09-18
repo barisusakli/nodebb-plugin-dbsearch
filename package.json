@@ -18,8 +18,7 @@
   "author": "Baris Usakli <baris@designcreateplay.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "async": "~0.2.8",
-    "winston": "~0.8.0"
+
   },
   "peerDependencies": {
     "redisearch": "^0.0.4"
