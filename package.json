@@ -21,7 +21,7 @@
 
   },
   "peerDependencies": {
-    "redisearch": "^0.0.4"
+    "redisearch": "^0.0.5"
   },
   "nbbpm": {
     "compatibility": "^0.7.0 || ^0.8.0"
