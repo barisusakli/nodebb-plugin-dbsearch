@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-dbsearch",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "description": "A Plugin that let's users search posts and topics",
   "main": "index.js",
   "repository": {
@@ -17,9 +17,7 @@
   ],
   "author": "Baris Usakli <baris@designcreateplay.com>",
   "license": "BSD-2-Clause",
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "peerDependencies": {
     "redisearch": "^0.0.5"
   },
