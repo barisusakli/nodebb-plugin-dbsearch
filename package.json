@@ -19,7 +19,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {},
   "peerDependencies": {
-    "redisearch": "^0.0.5"
+    "redisearch": "^0.0.6"
   },
   "nbbpm": {
     "compatibility": "^0.7.0 || ^0.8.0"
