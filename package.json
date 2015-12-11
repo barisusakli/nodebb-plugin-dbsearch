@@ -17,11 +17,10 @@
   ],
   "author": "Baris Usakli <baris@designcreateplay.com>",
   "license": "BSD-2-Clause",
-  "dependencies": {},
-  "peerDependencies": {
+  "dependencies": {
     "redisearch": "^0.0.6"
   },
   "nbbpm": {
-    "compatibility": "^0.7.0 || ^0.8.0"
+    "compatibility": "^0.9.3"
   }
 }
