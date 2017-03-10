@@ -26,5 +26,8 @@
 
         { "hook": "filter:search.query", "method": "searchQuery"}
     ],
+    "acpScripts": [
+        "lib/admin.js"
+    ],
     "templates": "./public/templates"
 }
