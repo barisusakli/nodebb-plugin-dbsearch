@@ -8,23 +8,23 @@
         "dbsearch": "public"
     },
     "hooks": [
+        { "hook": "static:app.load", "method": "init" },
+        { "hook": "filter:admin.header.build", "method": "admin.menu" },
 
-        { "hook": "static:app.load", "method": "init"},
-        { "hook": "filter:admin.header.build", "method": "admin.menu"},
+        { "hook": "action:post.save", "method": "postSave" },
+        { "hook": "action:post.restore", "method": "postRestore" },
+        { "hook": "action:post.edit", "method": "postEdit" },
+        { "hook": "action:post.delete", "method": "postDelete" },
+        { "hook": "action:post.move", "method": "postMove" },
 
-        { "hook": "action:post.save", "method": "postSave"},
-        { "hook": "action:post.restore", "method": "postRestore"},
-        { "hook": "action:post.edit", "method": "postEdit"},
-        { "hook": "action:post.delete", "method": "postDelete"},
-        { "hook": "action:post.move", "method": "postMove"},
+        { "hook": "action:topic.save", "method": "topicSave" },
+        { "hook": "action:topic.restore", "method": "topicRestore" },
+        { "hook": "action:topic.edit", "method": "topicEdit" },
+        { "hook": "action:topic.delete", "method": "topicDelete" },
+        { "hook": "action:topic.move", "method": "topicMove" },
 
-        { "hook": "action:topic.save", "method": "topicSave"},
-        { "hook": "action:topic.restore", "method": "topicRestore"},
-        { "hook": "action:topic.edit", "method": "topicEdit"},
-        { "hook": "action:topic.delete", "method": "topicDelete"},
-        { "hook": "action:topic.move", "method": "topicMove"},
-
-        { "hook": "filter:search.query", "method": "searchQuery"}
+        { "hook": "filter:search.query", "method": "searchQuery" },
+        { "hook": "filter:topic.search", "method": "searchTopic" }
     ],
     "acpScripts": [
         "lib/admin.js"
