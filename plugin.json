@@ -1,7 +1,7 @@
 {
     "id": "nodebb-plugin-dbsearch",
     "name": "DB Search",
-    "description": "A Plugin that let's users search posts and topics",
+    "description": "A Plugin that lets users search posts and topics",
     "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
     "library": "./index.js",
     "staticDirs": {

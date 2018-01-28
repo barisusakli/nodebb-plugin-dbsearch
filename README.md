@@ -1,6 +1,6 @@
 # NodeBB Plugin DB Search
 
-A Plugin that let's users search posts and topics
+A Plugin that lets users search posts and topics
 
 ## Installation
 
