@@ -27,6 +27,25 @@
 				</span>
 				<hr/>
 
+				<!-- IF languageSupported -->
+				<form class="form">
+					<div class="row">
+						<div class="col-sm-4 col-xs-12">
+							<div class="form-group">
+								<label>Index Language</label>
+								<select class="form-control" id="indexLanguage">
+									<!-- BEGIN languages -->
+									<option value="{languages.value}" <!-- IF languages.selected -->selected<!-- ENDIF languages.selected -->>{languages.name}</option>
+									<!-- END languages -->
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
+				<button class="btn btn-primary" id="changeLanguage">Change Language</button>
+				<hr/>
+				<!-- ENDIF languageSupported -->
+
 				<form class="form">
 					<div class="row">
 						<div class="col-sm-4 col-xs-12">
