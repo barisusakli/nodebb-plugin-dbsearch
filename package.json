@@ -19,7 +19,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "async": "2.1.4",
-    "redisearch": "0.0.8",
+    "redisearch": "0.0.9",
     "winston": "2.3.1"
   },
   "nbbpm": {
