@@ -7,6 +7,9 @@
     "staticDirs": {
         "dbsearch": "public"
     },
+    "upgrades": [
+        "upgrades/dbsearch_change_mongodb_schema.js"
+    ],
     "hooks": [
         { "hook": "static:app.load", "method": "init" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
