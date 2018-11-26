@@ -27,6 +27,15 @@
 				</span>
 				<hr/>
 
+				<div class="form-group post-search-item">
+					<label>Select categories to exclude from indexing</label>
+					<select multiple class="form-control" id="exclude-categories" size="10">
+						<!-- BEGIN allCategories -->
+						<option value="{allCategories.value}" <!-- IF allCategories.selected -->selected<!-- ENDIF allCategories.selected -->>{allCategories.text}</option>
+						<!-- END allCategories -->
+					</select>
+				</div>
+
 				<!-- IF languageSupported -->
 				<form class="form">
 					<div class="row">
