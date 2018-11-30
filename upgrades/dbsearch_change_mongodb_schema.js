@@ -44,12 +44,6 @@ module.exports = {
 			function (next) {
 				plugin.reindex(next);
 			},
-			function (next) {
-				client.collection('searchtopic').reIndex(next);
-			},
-			function (next) {
-				client.collection('searchpost').reIndex(next);
-			},
 		], callback);
 	},
 };
