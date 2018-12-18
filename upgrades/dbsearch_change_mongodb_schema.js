@@ -7,7 +7,7 @@ var db = module.parent.require('./database');
 
 module.exports = {
 	name: 'Changing dbsearch mongodb search schema to use _id',
-	timestamp: Date.UTC(2018, 11, 26),
+	timestamp: Date.UTC(2018, 10, 26),
 	method: function (callback) {
 		const nconf = require.main.require('nconf');
 		var isMongo = nconf.get('database') === 'mongo';
