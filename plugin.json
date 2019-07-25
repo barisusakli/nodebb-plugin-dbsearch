@@ -14,22 +14,22 @@
         { "hook": "static:app.load", "method": "init" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
 
-        { "hook": "action:post.save", "method": "postSave" },
-        { "hook": "action:post.restore", "method": "postRestore" },
-        { "hook": "action:post.edit", "method": "postEdit" },
-        { "hook": "action:post.delete", "method": "postDelete" },
-        { "hook": "action:post.purge", "method": "postPurge" },
-        { "hook": "action:post.move", "method": "postMove" },
+        { "hook": "action:post.save", "method": "actionPostSave" },
+        { "hook": "action:post.restore", "method": "actionPostRestore" },
+        { "hook": "action:post.edit", "method": "actionPostEdit" },
+        { "hook": "action:post.delete", "method": "actionPostDelete" },
+        { "hook": "action:post.purge", "method": "actionPostPurge" },
+        { "hook": "action:post.move", "method": "actionPostMove" },
 
-        { "hook": "action:topic.save", "method": "topicSave" },
-        { "hook": "action:topic.restore", "method": "topicRestore" },
-        { "hook": "action:topic.edit", "method": "topicEdit" },
-        { "hook": "action:topic.delete", "method": "topicDelete" },
-        { "hook": "action:topic.purge", "method": "topicPurge" },
-        { "hook": "action:topic.move", "method": "topicMove" },
+        { "hook": "action:topic.save", "method": "actionTopicSave" },
+        { "hook": "action:topic.restore", "method": "actionTopicRestore" },
+        { "hook": "action:topic.edit", "method": "actionTopicEdit" },
+        { "hook": "action:topic.delete", "method": "actionTopicDelete" },
+        { "hook": "action:topic.purge", "method": "actionTopicPurge" },
+        { "hook": "action:topic.move", "method": "actionTopicMove" },
 
-        { "hook": "filter:search.query", "method": "searchQuery" },
-        { "hook": "filter:topic.search", "method": "searchTopic" }
+        { "hook": "filter:search.query", "method": "filterSearchQuery" },
+        { "hook": "filter:topic.search", "method": "filterSearchTopic" }
     ],
     "acpScripts": [
         "lib/admin.js"
