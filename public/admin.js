@@ -106,7 +106,7 @@ define('admin/plugins/dbsearch', [], function () {
 				$('#reindex').attr('disabled', true);
 			}
 
-			$('#work-in-progress').toggleClass('d-none', !working);
+			$('#work-in-progress').toggleClass('hidden', !working);
 
 			if (progress.topicsPercent >= 100 && progress.postsPercent >= 100) {
 				progress.topicsPercent = 100;

@@ -22,7 +22,7 @@
 
 				<button class="btn btn-warning" id="reindex" <!-- IF working -->disabled<!-- ENDIF working -->>Re Index</button>
 				<button class="btn btn-danger" id="clear-index">Clear Index</button>
-				<span id="work-in-progress" class="<!-- IF !working -->d-none<!-- ENDIF !working -->">
+				<span id="work-in-progress" class="<!-- IF !working -->hidden<!-- ENDIF !working -->">
 					<i class="fa fa-gear fa-spin"></i> Working...
 				</span>
 				<hr/>
