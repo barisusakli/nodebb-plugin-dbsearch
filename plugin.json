@@ -20,6 +20,7 @@
         { "hook": "action:post.delete", "method": "actionPostDelete" },
         { "hook": "action:post.purge", "method": "actionPostPurge" },
         { "hook": "action:post.move", "method": "actionPostMove" },
+        { "hook": "action:post.changeOwner", "method": "actionPostChangeOwner" },
 
         { "hook": "action:topic.save", "method": "actionTopicSave" },
         { "hook": "action:topic.restore", "method": "actionTopicRestore" },
@@ -27,6 +28,7 @@
         { "hook": "action:topic.delete", "method": "actionTopicDelete" },
         { "hook": "action:topic.purge", "method": "actionTopicPurge" },
         { "hook": "action:topic.move", "method": "actionTopicMove" },
+        { "hook": "action:topic.changeOwner", "method": "actionTopicChangeOwner" },
 
         { "hook": "filter:search.query", "method": "filterSearchQuery" },
         { "hook": "filter:topic.search", "method": "filterSearchTopic" }
