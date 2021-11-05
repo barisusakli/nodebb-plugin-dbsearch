@@ -1,7 +1,5 @@
 'use strict';
 
-/* globals $, window, app, define, socket, config, ajaxify, bootbox */
-
 define('admin/plugins/dbsearch', [], function () {
 	var dbsearch = {};
 	var intervalId = 0;
@@ -79,9 +77,7 @@ define('admin/plugins/dbsearch', [], function () {
 
 	function startProgress() {
 		clearProgress();
-		checkProgress();
-
-		intervalId = setInterval(checkProgress, 750);
+		intervalId = setInterval(checkProgress, 1000);
 	}
 
 	function clearProgress() {

@@ -4,9 +4,6 @@
     "description": "A Plugin that lets users search posts and topics",
     "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
     "library": "./index.js",
-    "staticDirs": {
-        "dbsearch": "public"
-    },
     "upgrades": [
         "upgrades/dbsearch_change_mongodb_schema.js"
     ],
@@ -34,7 +31,7 @@
         { "hook": "filter:topic.search", "method": "filterSearchTopic" }
     ],
     "acpScripts": [
-        "lib/admin.js"
+        "public/admin.js"
     ],
-    "templates": "./public/templates"
+    "templates": "./templates"
 }
