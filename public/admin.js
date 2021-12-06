@@ -1,6 +1,6 @@
 'use strict';
 
-define('admin/plugins/dbsearch', [], function () {
+define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 	var dbsearch = {};
 	var intervalId = 0;
 
@@ -35,7 +35,7 @@ define('admin/plugins/dbsearch', [], function () {
 				}
 				socket.emit('admin.plugins.dbsearch.reindex', function (err) {
 					if (err) {
-						app.alertError(err.message);
+						alerts.error(err);
 						return clearProgress();
 					}
 					app.alertSuccess('Started indexing content! This might take a while. You can check the progress on this page.');
@@ -53,7 +53,7 @@ define('admin/plugins/dbsearch', [], function () {
 				}
 				socket.emit('admin.plugins.dbsearch.clearIndex', function (err) {
 					if (err) {
-						app.alertError(err.message);
+						alerts.error(err);
 						return clearProgress();
 					}
 					app.alertSuccess('Started clearing index! This might take a while. You can check the progress on this page.');
@@ -68,7 +68,7 @@ define('admin/plugins/dbsearch', [], function () {
 			app.alertSuccess('Changing index language to "' + lang + '".');
 			socket.emit('admin.plugins.dbsearch.changeLanguage', lang, function (err) {
 				if (err) {
-					return app.alertError(err.message);
+					return alerts.error(err);
 				}
 				app.alertSuccess('Search index language changed!');
 			});
@@ -91,7 +91,7 @@ define('admin/plugins/dbsearch', [], function () {
 		socket.emit('admin.plugins.dbsearch.checkProgress', function (err, progress) {
 			if (err) {
 				clearProgress();
-				return app.alertError(err.message);
+				return alerts.error(err);
 			}
 
 			var working = parseInt(progress.working, 10);
