@@ -21,7 +21,7 @@ define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 				excludeCategories: $('#exclude-categories').val(),
 			}, function (data) {
 				if (typeof data === 'string') {
-					app.alertSuccess('Settings saved');
+					alerts.success('Settings saved');
 				}
 			});
 
@@ -38,7 +38,7 @@ define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 						alerts.error(err);
 						return clearProgress();
 					}
-					app.alertSuccess('Started indexing content! This might take a while. You can check the progress on this page.');
+					alerts.success('Started indexing content! This might take a while. You can check the progress on this page.');
 					startProgress();
 				});
 			});
@@ -56,7 +56,7 @@ define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 						alerts.error(err);
 						return clearProgress();
 					}
-					app.alertSuccess('Started clearing index! This might take a while. You can check the progress on this page.');
+					alerts.success('Started clearing index! This might take a while. You can check the progress on this page.');
 					startProgress();
 				});
 			});
@@ -65,12 +65,12 @@ define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 
 		$('#changeLanguage').on('click', function () {
 			var lang = $('#indexLanguage').val();
-			app.alertSuccess('Changing index language to "' + lang + '".');
+			alerts.success('Changing index language to "' + lang + '".');
 			socket.emit('admin.plugins.dbsearch.changeLanguage', lang, function (err) {
 				if (err) {
 					return alerts.error(err);
 				}
-				app.alertSuccess('Search index language changed!');
+				alerts.success('Search index language changed!');
 			});
 		});
 	};
