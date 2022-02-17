@@ -30,8 +30,8 @@
         { "hook": "filter:search.query", "method": "filterSearchQuery" },
         { "hook": "filter:topic.search", "method": "filterSearchTopic" }
     ],
-    "acpScripts": [
-        "public/admin.js"
-    ],
+    "modules": {
+        "admin/plugins/dbsearch.js": "public/admin.js"
+    },
     "templates": "./templates"
 }
