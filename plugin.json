@@ -31,7 +31,7 @@
         { "hook": "filter:topic.search", "method": "filterSearchTopic" }
     ],
     "modules": {
-        "admin/plugins/dbsearch.js": "public/admin.js"
+        "../admin/plugins/dbsearch.js": "public/admin.js"
     },
     "templates": "./templates"
 }
