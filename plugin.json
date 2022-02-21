@@ -1,8 +1,8 @@
 {
-    "id": "nodebb-plugin-dbsearch",
+    "id": "nodebb-plugin-dbsearch-miraiforum",
     "name": "DB Search",
-    "description": "A Plugin that lets users search posts and topics",
-    "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
+    "description": "A Plugin that lets users search posts and topics for miraiforum",
+    "url": "https://github.com/mzdluo123/nodebb-plugin-dbsearch",
     "library": "./index.js",
     "upgrades": [
         "upgrades/dbsearch_change_mongodb_schema.js"
