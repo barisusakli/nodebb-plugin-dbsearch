@@ -15,7 +15,7 @@
         { "hook": "action:post.restore", "method": "actionPostRestore" },
         { "hook": "action:post.edit", "method": "actionPostEdit" },
         { "hook": "action:post.delete", "method": "actionPostDelete" },
-        { "hook": "action:post.purge", "method": "actionPostPurge" },
+        { "hook": "action:posts.purge", "method": "actionPostsPurge" },
         { "hook": "action:post.move", "method": "actionPostMove" },
         { "hook": "action:post.changeOwner", "method": "actionPostChangeOwner" },
 

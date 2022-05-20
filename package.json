@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-dbsearch-miraiforum",
-  "version": "5.1.3",
+  "version": "5.1.5",
   "description": "miraiforum 优化版搜索插件",
   "main": "index.js",
   "repository": {
@@ -28,6 +28,6 @@
     "eslint-plugin-import": "2.25.2"
   },
   "nbbpm": {
-    "compatibility": "^1.18.6"
+    "compatibility": "^1.19.6"
   }
 }
