@@ -15,7 +15,7 @@ define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 	dbsearch.init = function () {
 		$('#save').on('click', function () {
 			$.post(config.relative_path + '/api/admin/plugins/dbsearch/save', {
-				_csrf: $('#csrf_token').val(),
+				_csrf: config.csrf_token,
 				topicLimit: $('#topicLimit').val(),
 				postLimit: $('#postLimit').val(),
 				excludeCategories: $('#exclude-categories').val(),
