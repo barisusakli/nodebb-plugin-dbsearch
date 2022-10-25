@@ -1,6 +1,8 @@
 'use strict';
 
-define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
+define('admin/plugins/dbsearch', [
+	'alerts', 'admin/settings',
+], function (alerts, settings) {
 	var dbsearch = {};
 	var intervalId = 0;
 
@@ -21,7 +23,7 @@ define('admin/plugins/dbsearch', ['alerts'], function (alerts) {
 				excludeCategories: $('#exclude-categories').val(),
 			}, function (data) {
 				if (typeof data === 'string') {
-					alerts.success('Settings saved');
+					settings.toggleSaveSuccess($('#save'));
 				}
 			});
 
