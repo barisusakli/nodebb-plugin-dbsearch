@@ -27,6 +27,11 @@
         { "hook": "action:topic.move", "method": "actionTopicMove" },
         { "hook": "action:topic.changeOwner", "method": "actionTopicChangeOwner" },
 
+        { "hook": "action:messaging.save", "method": "actionMessagingSave" },
+        { "hook": "action:messaging.delete", "method": "actionMessagingDelete" },
+        { "hook": "action:messaging.restore", "method": "actionMessagingRestore" },
+        { "hook": "action:messaging.edit", "method": "actionMessagingEdit" },
+
         { "hook": "filter:search.query", "method": "filterSearchQuery" },
         { "hook": "filter:topic.search", "method": "filterSearchTopic" }
     ],
