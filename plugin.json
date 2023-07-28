@@ -33,7 +33,8 @@
         { "hook": "action:messaging.edit", "method": "actionMessagingEdit" },
 
         { "hook": "filter:search.query", "method": "filterSearchQuery" },
-        { "hook": "filter:topic.search", "method": "filterSearchTopic" }
+        { "hook": "filter:topic.search", "method": "filterSearchTopic" },
+        { "hook": "filter:messaging.searchMessages", "method": "filterMessagingSearchMessages" }
     ],
     "modules": {
         "../admin/plugins/dbsearch.js": "public/admin.js"
