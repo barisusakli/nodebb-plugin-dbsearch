@@ -19,7 +19,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "lodash": "4.17.21",
-    "redisearch": "^1.0.1"
+    "redisearch": "^1.0.3"
   },
   "devDependencies": {
     "eslint": "7.32.0",
@@ -27,6 +27,6 @@
     "eslint-plugin-import": "2.25.2"
   },
   "nbbpm": {
-    "compatibility": "^3.0.0"
+    "compatibility": "^3.3.0"
   }
 }

@@ -25,6 +25,15 @@
 							</div>
 						</div>
 
+						<div class="mb-3">
+							<div class="alert alert-info">
+								Messages Indexed: <strong id="messages-indexed">{messagesIndexed}</strong> / <strong>{messageCount}</strong>
+							</div>
+							<div class="progress" style="height:24px;">
+								<div class="message-progress progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:{progressData.messagesPercent}%;min-width: 2em;">{progressData.messagesPercent}%</div>
+							</div>
+						</div>
+
 						<button class="btn btn-warning" id="reindex" <!-- IF working -->disabled<!-- ENDIF working -->>Re Index</button>
 						<button class="btn btn-danger" id="clear-index">Clear Index</button>
 						<span id="work-in-progress" class="<!-- IF !working -->hidden<!-- ENDIF !working -->">

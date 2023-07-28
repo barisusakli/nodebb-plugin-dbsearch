@@ -113,8 +113,10 @@ define('admin/plugins/dbsearch', [
 
 			$('#topics-indexed').text(progress.topicsIndexed);
 			$('#posts-indexed').text(progress.postsIndexed);
+			$('#messages-indexed').text(progress.messagesIndexed);
 			$('.topic-progress').css('width', progress.topicsPercent + '%').text(progress.topicsPercent + '%');
 			$('.post-progress').css('width', progress.postsPercent + '%').text(progress.postsPercent + '%');
+			$('.message-progress').css('width', progress.messagesPercent + '%').text(progress.messagesPercent + '%');
 		});
 	}
 
