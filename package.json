@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-dbsearch",
-  "version": "6.2.4",
+  "version": "6.2.5",
   "description": "A Plugin that lets users search posts and topics",
   "main": "index.js",
   "repository": {
