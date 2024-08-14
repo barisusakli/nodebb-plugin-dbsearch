@@ -1,8 +1,8 @@
 {
-    "id": "nodebb-plugin-dbsearch",
-    "name": "DB Search",
-    "description": "A Plugin that lets users search posts and topics",
-    "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
+    "id": "nodebb-plugin-dbsearch-korean",
+    "name": "DB Search Korean",
+    "description": "사용자가 한글로 게시물과 토픽을 검색할 수 있게 만들어 주는 플러그인",
+    "url": "https://github.com/navystack/nodebb-plugin-dbsearch-korean",
     "library": "./index.js",
     "upgrades": [
         "upgrades/dbsearch_change_mongodb_schema.js"

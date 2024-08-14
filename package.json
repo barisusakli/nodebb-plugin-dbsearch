@@ -1,11 +1,11 @@
 {
-  "name": "nodebb-plugin-dbsearch",
+  "name": "nodebb-plugin-dbsearch-korean",
   "version": "6.2.5",
-  "description": "A Plugin that lets users search posts and topics",
+  "description": "사용자가 한글로 게시물과 토픽을 검색할 수 있게 만들어 주는 플러그인",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch"
+    "url": "https://github.com/navystack/nodebb-plugin-dbsearch-korean"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,10 +15,11 @@
     "plugin",
     "search"
   ],
-  "author": "Baris Usakli <baris@designcreateplay.com>",
+  "author": "NavyStack <navystack@askfront.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
     "lodash": "4.17.21",
+    "mecab-ya": "github:NavyStack/node-mecab-ya",
     "redisearch": "^1.0.3"
   },
   "devDependencies": {
