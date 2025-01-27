@@ -20,13 +20,12 @@ module.exports = {
 				if (doc._id) {
 					const stringId = doc._id.toString();
 					// eslint-disable-next-line no-await-in-loop
+					await db.client.collection(collection).deleteOne({ _id: doc._id });
+					// eslint-disable-next-line no-await-in-loop
 					await db.client.collection(collection).insertOne({
 						...doc,
 						_id: stringId,
 					});
-
-					// eslint-disable-next-line no-await-in-loop
-					await db.client.collection(collection).deleteOne({ _id: doc._id });
 				}
 				progress.incr(1);
 			}
