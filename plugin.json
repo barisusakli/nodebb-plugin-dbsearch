@@ -5,7 +5,8 @@
     "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch",
     "library": "./index.js",
     "upgrades": [
-        "upgrades/dbsearch_change_mongodb_schema.js"
+        "upgrades/dbsearch_change_mongodb_schema.js",
+        "upgrades/dbsearch_change_integer_index.js"
     ],
     "hooks": [
         { "hook": "static:app.load", "method": "init" },
