@@ -46,14 +46,18 @@ module.exports = {
 		}
 
 		if (mainDB === 'postgres') {
-			await db.client.query('ALTER TABLE searchtopic ALTER COLUMN id TYPE text USING id::bigint');
-			await db.client.query('ALTER TABLE searchtopic ALTER COLUMN uid TYPE text USING uid::bigint');
+			try {
+				await db.client.query('ALTER TABLE searchtopic ALTER COLUMN id TYPE text USING id::bigint');
+				await db.client.query('ALTER TABLE searchtopic ALTER COLUMN uid TYPE text USING uid::bigint');
 
-			await db.client.query('ALTER TABLE searchpost ALTER COLUMN id TYPE text USING id::bigint');
-			await db.client.query('ALTER TABLE searchpost ALTER COLUMN uid TYPE text USING uid::bigint');
+				await db.client.query('ALTER TABLE searchpost ALTER COLUMN id TYPE text USING id::bigint');
+				await db.client.query('ALTER TABLE searchpost ALTER COLUMN uid TYPE text USING uid::bigint');
 
-			await db.client.query('ALTER TABLE searchchat ALTER COLUMN id TYPE text USING id::bigint');
-			await db.client.query('ALTER TABLE searchchat ALTER COLUMN uid TYPE text USING uid::bigint');
+				await db.client.query('ALTER TABLE searchchat ALTER COLUMN id TYPE text USING id::bigint');
+				await db.client.query('ALTER TABLE searchchat ALTER COLUMN uid TYPE text USING uid::bigint');
+			} catch (err) {
+				console.error(err.stack);
+			}
 		}
 	},
 };
