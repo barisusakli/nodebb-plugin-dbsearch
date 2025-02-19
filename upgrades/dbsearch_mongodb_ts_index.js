@@ -9,39 +9,37 @@ module.exports = {
 	method: async function () {
 		const { progress } = this;
 		const nconf = require.main.require('nconf');
+		const batch = require.main.require('./src/batch');
 		const isMongo = nconf.get('database') === 'mongo';
 		if (!isMongo) {
 			return;
 		}
 
 		async function addTsField(collection, docs) {
-			for (const doc of docs) {
-				if (doc._id) {
-					const stringId = doc._id;
-					let ts = 0;
-					if (collection === 'searchtopic') {
-						// eslint-disable-next-line no-await-in-loop
-						ts = await db.getObjectField(`topic:${stringId}`, 'timestamp');
-					} else if (collection === 'searchpost') {
-						// eslint-disable-next-line no-await-in-loop
-						ts = await db.getObjectField(`post:${stringId}`, 'timestamp');
-					}
-					ts = parseInt(ts, 10);
-					if (ts) {
-						// eslint-disable-next-line no-await-in-loop
-						await db.client.collection(collection).updateOne({
-							_id: stringId,
-						}, { $set: { ts } });
-					}
+			await batch.processArray(docs, async (docData) => {
+				const ids = docData.map(d => d._id);
+				let itemData = [];
+				if (collection === 'searchtopic') {
+					itemData = await db.getObjectsFields(ids.map(id => `topic:${id}`), ['timestamp']);
+				} else if (collection === 'searchpost') {
+					itemData = await db.getObjectsFields(ids.map(id => `post:${id}`), ['timestamp']);
 				}
-				progress.incr(1);
-			}
+				const bulk = db.client.collection(collection).initializeUnorderedBulkOp();
+				ids.forEach(
+					(id, index) => bulk.find({ _id: id }).updateOne({ $set: { ts: itemData[index].timestamp } })
+				);
+				await bulk.execute();
+				progress.incr(docData.length);
+			}, {
+				batch: 500,
+			});
 		}
 		await db.client.collection('searchtopic').createIndex({ ts: 1 }, { });
 		await db.client.collection('searchpost').createIndex({ ts: 1 }, { });
 
-		const topics = await db.client.collection('searchtopic').find({}).toArray();
-		const posts = await db.client.collection('searchpost').find({}).toArray();
+		const projection = { _id: 1, cid: 0, uid: 0, content: 0 };
+		const topics = await db.client.collection('searchtopic').find({}, { projection }).toArray();
+		const posts = await db.client.collection('searchpost').find({}, { projection }).toArray();
 
 		progress.total = topics.length + posts.length;
 
