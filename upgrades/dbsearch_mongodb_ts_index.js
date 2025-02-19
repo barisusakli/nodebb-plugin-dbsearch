@@ -37,8 +37,8 @@ module.exports = {
 				progress.incr(1);
 			}
 		}
-		await db.client.collection('searchtopic').createIndex({ ts: 1 }, { background: true });
-		await db.client.collection('searchpost').createIndex({ ts: 1 }, { background: true });
+		await db.client.collection('searchtopic').createIndex({ ts: 1 }, { });
+		await db.client.collection('searchpost').createIndex({ ts: 1 }, { });
 
 		const topics = await db.client.collection('searchtopic').find({}).toArray();
 		const posts = await db.client.collection('searchpost').find({}).toArray();
