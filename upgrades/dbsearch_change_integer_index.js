@@ -33,13 +33,13 @@ module.exports = {
 
 		if (mainDB === 'mongo') {
 			const topics = await db.client.collection('searchtopic').find({}).toArray();
-			const posts = await db.client.collection('searchposts').find({}).toArray();
+			const posts = await db.client.collection('searchpost').find({}).toArray();
 			const chats = await db.client.collection('searchchat').find({}).toArray();
 
 			progress.total = topics.length + posts.length + chats.length;
 
 			await convertIdToString('searchtopic', topics);
-			await convertIdToString('searchposts', posts);
+			await convertIdToString('searchpost', posts);
 			await convertIdToString('searchchat', chats);
 
 			return;
