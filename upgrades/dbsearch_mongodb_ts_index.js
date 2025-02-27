@@ -37,7 +37,7 @@ module.exports = {
 		await db.client.collection('searchtopic').createIndex({ ts: 1 }, { });
 		await db.client.collection('searchpost').createIndex({ ts: 1 }, { });
 
-		const projection = { _id: 1, cid: 0, uid: 0, content: 0 };
+		const projection = { _id: 1 };
 		const topics = await db.client.collection('searchtopic').find({}, { projection }).toArray();
 		const posts = await db.client.collection('searchpost').find({}, { projection }).toArray();
 
