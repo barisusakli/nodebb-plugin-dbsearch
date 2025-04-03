@@ -14,21 +14,23 @@ module.exports = {
 			// redis is not affected, since everything is string already
 			return;
 		}
-
+		const batch = require.main.require('./src/batch');
 		async function convertIdToString(collection, docs) {
-			for (const doc of docs) {
-				if (doc._id) {
-					const stringId = doc._id.toString();
-					// eslint-disable-next-line no-await-in-loop
-					await db.client.collection(collection).deleteOne({ _id: doc._id });
-					// eslint-disable-next-line no-await-in-loop
-					await db.client.collection(collection).insertOne({
-						...doc,
-						_id: stringId,
-					});
-				}
-				progress.incr(1);
-			}
+			await batch.processArray(docs, async (docs) => {
+				await db.client.collection(collection).deleteMany({
+					_id: { $in: docs.map(doc => doc._id) },
+				});
+
+				const bulk = db.client.collection(collection).initializeUnorderedBulkOp();
+				docs.forEach(doc => bulk.insertOne({
+					...doc,
+					_id: doc._id.toString(),
+				}));
+				await bulk.execute();
+			}, {
+				batch: 500,
+			});
+			progress.incr(docs.length);
 		}
 
 		if (mainDB === 'mongo') {
