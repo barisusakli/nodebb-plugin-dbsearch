@@ -22,7 +22,7 @@ module.exports = {
 				});
 
 				const bulk = db.client.collection(collection).initializeUnorderedBulkOp();
-				docs.forEach(doc => bulk.insertOne({
+				docs.forEach(doc => bulk.insert({
 					...doc,
 					_id: doc._id.toString(),
 				}));
