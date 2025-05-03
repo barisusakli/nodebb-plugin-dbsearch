@@ -41,5 +41,6 @@
     "modules": {
         "../admin/plugins/dbsearch.js": "public/admin.js"
     },
-    "templates": "./templates"
+    "templates": "./templates",
+    "languages": "./languages"
 }

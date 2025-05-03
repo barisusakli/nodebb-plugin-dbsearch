@@ -1,0 +1,17 @@
+{
+  "admin.menuname":"数据库搜索",
+  "admin.title": "数据库搜索",
+  "admin.topicsIndexed": "已索引主题：",
+  "admin.postsIndexed": "已索引帖子：",
+  "admin.messagesIndexed": "已索引消息：",
+  "admin.reindex": "重新索引",
+  "admin.clearIndex": "清空索引",
+  "admin.working": "正在处理...",
+  "admin.indexLanguage": "索引语言",
+  "admin.changeLanguage": "更改语言",
+  "admin.topicLimit": "主题限制",
+  "admin.topicLimitPlaceholder": "要返回的主题数量",
+  "admin.postLimit": "帖子限制",
+  "admin.postLimitPlaceholder": "要返回的帖子数量",
+  "admin.excludeCategories": "选择要从索引中排除的分类"
+}
