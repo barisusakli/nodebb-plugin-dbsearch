@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-dbsearch",
-  "version": "6.2.15",
+  "version": "6.2.16",
   "description": "A Plugin that lets users search posts and topics",
   "main": "index.js",
   "repository": {
@@ -8,7 +8,8 @@
     "url": "https://github.com/barisusakli/nodebb-plugin-dbsearch"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "keywords": [
     "nodebb",
@@ -22,9 +23,9 @@
     "redisearch": "^1.0.3"
   },
   "devDependencies": {
-    "eslint": "7.32.0",
-    "eslint-config-nodebb": "0.0.3",
-    "eslint-plugin-import": "2.25.2"
+    "eslint": "^9.25.1",
+    "eslint-config-nodebb": "^1.1.4",
+    "eslint-plugin-import": "^2.31.0"
   },
   "nbbpm": {
     "compatibility": "^4.0.0"
