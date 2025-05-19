@@ -27,10 +27,10 @@ module.exports = {
 					_id: doc._id.toString(),
 				}));
 				await bulk.execute();
+				progress.incr(docs.length);
 			}, {
 				batch: 500,
 			});
-			progress.incr(docs.length);
 		}
 
 		if (mainDB === 'mongo') {
