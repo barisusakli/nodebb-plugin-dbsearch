@@ -1,0 +1,17 @@
+{
+  "admin.menuname":"DB Search",
+  "admin.title": "DB Search",
+  "admin.topicsIndexed": "Topics Indexed:",
+  "admin.postsIndexed": "Posts Indexed:",
+  "admin.messagesIndexed": "Messages Indexed:",
+  "admin.reindex": "Re Index",
+  "admin.clearIndex": "Clear Index",
+  "admin.working": "Working...",
+  "admin.indexLanguage": "Index Language",
+  "admin.changeLanguage": "Change Language",
+  "admin.topicLimit": "Topic Limit",
+  "admin.topicLimitPlaceholder": "Number of topics to return",
+  "admin.postLimit": "Post Limit",
+  "admin.postLimitPlaceholder": "Number of posts to return",
+  "admin.excludeCategories": "Select categories to exclude from indexing"
+}
