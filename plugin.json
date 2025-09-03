@@ -7,7 +7,8 @@
     "upgrades": [
         "upgrades/dbsearch_change_mongodb_schema.js",
         "upgrades/dbsearch_change_integer_index.js",
-        "upgrades/dbsearch_mongodb_ts_index.js"
+        "upgrades/dbsearch_mongodb_ts_index.js",
+        "upgrades/dbsearch_psql_cid_text_index.js"
     ],
     "hooks": [
         { "hook": "static:app.load", "method": "init" },
