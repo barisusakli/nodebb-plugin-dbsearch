@@ -9,27 +9,27 @@
 					<div class="col-6">
 						<div class="mb-3">
 							<div class="alert alert-info">
-								Topics Indexed: <strong id="topics-indexed">{topicsIndexed}</strong> / <strong>{topicCount}</strong>
+								Topics Indexed: <strong id="topics-indexed">{topicsIndexed}</strong> <i class="fa fa-circle-question" title="Deleted topics are not indexed" data-bs-toggle="tooltip"></i>
 							</div>
 
-							<div class="progress" style="height:24px;">
+							<div class="progress {{{ if !working }}}invisible{{{ end }}}" style="height:24px;">
 								<div class="topic-progress progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:{progressData.topicsPercent}%;min-width: 2em;">{progressData.topicsPercent}%</div>
 							</div>
 						</div>
 						<div class="mb-3">
 							<div class="alert alert-info">
-								Posts Indexed: <strong id="posts-indexed">{postsIndexed}</strong> / <strong>{postCount}</strong>
+								Posts Indexed: <strong id="posts-indexed">{postsIndexed}</strong> <i class="fa fa-circle-question" title="Deleted posts are not indexed" data-bs-toggle="tooltip"></i>
 							</div>
-							<div class="progress" style="height:24px;">
+							<div class="progress {{{ if !working }}}invisible{{{ end }}}" style="height:24px;">
 								<div class="post-progress progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:{progressData.postsPercent}%;min-width: 2em;">{progressData.postsPercent}%</div>
 							</div>
 						</div>
 
 						<div class="mb-3">
 							<div class="alert alert-info">
-								Messages Indexed: <strong id="messages-indexed">{messagesIndexed}</strong> / <strong>{messageCount}</strong>
+								Messages Indexed: <strong id="messages-indexed">{messagesIndexed}</strong> <i class="fa fa-circle-question" title="Deleted messages are not indexed" data-bs-toggle="tooltip"></i>
 							</div>
-							<div class="progress" style="height:24px;">
+							<div class="progress {{{ if !working }}}invisible{{{ end }}}" style="height:24px;">
 								<div class="message-progress progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:{progressData.messagesPercent}%;min-width: 2em;">{progressData.messagesPercent}%</div>
 							</div>
 						</div>

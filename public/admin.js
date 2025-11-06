@@ -78,6 +78,11 @@ define('admin/plugins/dbsearch', [
 	};
 
 	function startProgress() {
+		$('#topics-indexed').text(0);
+		$('#posts-indexed').text(0);
+		$('#messages-indexed').text(0);
+		$('.progress-bar').css('width', '0%').text('0%');
+		$('.progress').removeClass('invisible');
 		clearProgress();
 		intervalId = setInterval(checkProgress, 1000);
 	}
@@ -85,6 +90,7 @@ define('admin/plugins/dbsearch', [
 	function clearProgress() {
 		if (intervalId) {
 			clearInterval(intervalId);
+			$('.progress').addClass('invisible');
 			intervalId = 0;
 		}
 	}
@@ -96,27 +102,31 @@ define('admin/plugins/dbsearch', [
 				return alerts.error(err);
 			}
 
+			$('.topic-progress').css('width', progress.topicsPercent + '%').text(progress.topicsPercent + '%');
+			$('.post-progress').css('width', progress.postsPercent + '%').text(progress.postsPercent + '%');
+			$('.message-progress').css('width', progress.messagesPercent + '%').text(progress.messagesPercent + '%');
+
 			var working = parseInt(progress.working, 10);
 			if (!working) {
 				clearInterval(intervalId);
 				$('#reindex').removeAttr('disabled');
+				$('#clear-index').removeAttr('disabled');
+				setTimeout(() => {
+					$('.progress').addClass('invisible');
+				}, 2000);
+
+				$.getJSON(config.relative_path + '/api/admin/plugins/dbsearch', function (data) {
+					$('#topics-indexed').text(data.topicsIndexed);
+					$('#posts-indexed').text(data.postsIndexed);
+					$('#messages-indexed').text(data.messagesIndexed);
+				});
 			} else {
 				$('#reindex').attr('disabled', true);
+				$('#clear-index').attr('disabled', true);
+				$('.progress').removeClass('invisible');
 			}
 
 			$('#work-in-progress').toggleClass('hidden', !working);
-
-			if (progress.topicsPercent >= 100 && progress.postsPercent >= 100) {
-				progress.topicsPercent = 100;
-				progress.postsPercent = 100;
-			}
-
-			$('#topics-indexed').text(progress.topicsIndexed);
-			$('#posts-indexed').text(progress.postsIndexed);
-			$('#messages-indexed').text(progress.messagesIndexed);
-			$('.topic-progress').css('width', progress.topicsPercent + '%').text(progress.topicsPercent + '%');
-			$('.post-progress').css('width', progress.postsPercent + '%').text(progress.postsPercent + '%');
-			$('.message-progress').css('width', progress.messagesPercent + '%').text(progress.messagesPercent + '%');
 		});
 	}
 

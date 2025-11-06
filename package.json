@@ -20,7 +20,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "lodash": "4.17.21",
-    "redisearch": "^2.0.0"
+    "redisearch": "^2.0.1"
   },
   "devDependencies": {
     "eslint": "^9.25.1",
