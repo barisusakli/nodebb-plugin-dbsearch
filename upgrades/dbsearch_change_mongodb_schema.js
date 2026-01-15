@@ -23,6 +23,5 @@ module.exports = {
 		} catch (err) {
 			winston.error(err.stack);
 		}
-		await plugin.reindex();
 	},
 };
