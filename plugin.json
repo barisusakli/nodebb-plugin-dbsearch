@@ -26,7 +26,7 @@
         { "hook": "action:topic.restore", "method": "actionTopicRestore" },
         { "hook": "action:topic.edit", "method": "actionTopicEdit" },
         { "hook": "action:topic.delete", "method": "actionTopicDelete" },
-        { "hook": "action:topic.purge", "method": "actionTopicPurge" },
+        { "hook": "action:topics.purge", "method": "actionTopicsPurge" },
         { "hook": "action:topic.move", "method": "actionTopicMove" },
         { "hook": "action:topic.changeOwner", "method": "actionTopicChangeOwner" },
 
