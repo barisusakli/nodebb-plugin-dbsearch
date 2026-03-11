@@ -3,8 +3,8 @@
 define('admin/plugins/dbsearch', [
 	'alerts', 'admin/settings',
 ], function (alerts, settings) {
-	var dbsearch = {};
-	var intervalId = 0;
+	const dbsearch = {};
+	let intervalId = 0;
 
 	$(window).on('action:ajaxify.end', function (ev, data) {
 		if (data.url === 'admin/plugins/dbsearch' && ajaxify.data.working) {
@@ -66,7 +66,7 @@ define('admin/plugins/dbsearch', [
 		});
 
 		$('#changeLanguage').on('click', function () {
-			var lang = $('#indexLanguage').val();
+			const lang = $('#indexLanguage').val();
 			alerts.success('Changing index language to "' + lang + '".');
 			socket.emit('admin.plugins.dbsearch.changeLanguage', lang, function (err) {
 				if (err) {
@@ -106,7 +106,7 @@ define('admin/plugins/dbsearch', [
 			$('.post-progress').css('width', progress.postsPercent + '%').text(progress.postsPercent + '%');
 			$('.message-progress').css('width', progress.messagesPercent + '%').text(progress.messagesPercent + '%');
 
-			var working = parseInt(progress.working, 10);
+			const working = parseInt(progress.working, 10);
 			if (!working) {
 				clearInterval(intervalId);
 				$('#reindex').removeAttr('disabled');
