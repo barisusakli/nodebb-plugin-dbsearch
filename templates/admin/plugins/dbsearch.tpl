@@ -63,6 +63,17 @@
 							<label class="form-label">Post Limit</label>
 							<input id="postLimit" type="text" class="form-control" placeholder="Number of posts to return" value="{postLimit}">
 						</div>
+
+						<!-- IF mongoBackend -->
+						<div class="mb-3">
+							<label class="form-label">MongoDB Read Preference <i class="fa fa-circle-question" title="Routes search read queries (text search and indexed-document counts) to the chosen replica set member. secondaryPreferred can offload search load from the primary on replica set deployments; results may be slightly stale due to replication lag. Has no effect on standalone deployments." data-bs-toggle="tooltip"></i></label>
+							<select class="form-select" id="mongoReadPreference">
+								<!-- BEGIN mongoReadPreferences -->
+								<option value="{mongoReadPreferences.value}" <!-- IF mongoReadPreferences.selected -->selected<!-- ENDIF mongoReadPreferences.selected -->>{mongoReadPreferences.value}</option>
+								<!-- END mongoReadPreferences -->
+							</select>
+						</div>
+						<!-- ENDIF mongoBackend -->
 					</div>
 
 					<div class="col-6">

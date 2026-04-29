@@ -21,6 +21,7 @@ define('admin/plugins/dbsearch', [
 				topicLimit: $('#topicLimit').val(),
 				postLimit: $('#postLimit').val(),
 				excludeCategories: $('#exclude-categories').val(),
+				mongoReadPreference: $('#mongoReadPreference').val(),
 			}, function (data) {
 				if (typeof data === 'string') {
 					settings.toggleSaveSuccess($('#save'));
