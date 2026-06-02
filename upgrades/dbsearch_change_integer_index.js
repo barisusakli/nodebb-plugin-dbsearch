@@ -8,13 +8,13 @@ module.exports = {
 	timestamp: Date.UTC(2025, 0, 27),
 	method: async function () {
 		const { progress } = this;
-		const nconf = require.main.require('nconf');
+		const nconf = nodebb.require('nconf');
 		const mainDB = nconf.get('database');
 		if (mainDB === 'redis') {
 			// redis is not affected, since everything is string already
 			return;
 		}
-		const batch = require.main.require('./src/batch');
+		const batch = nodebb.require('./src/batch');
 		async function convertIdToString(collection, docs) {
 			await batch.processArray(docs, async (docs) => {
 				await db.client.collection(collection).deleteMany({

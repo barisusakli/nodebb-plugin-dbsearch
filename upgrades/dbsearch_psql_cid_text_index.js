@@ -7,7 +7,7 @@ module.exports = {
 	name: 'Changing integer cid index to text for psql',
 	timestamp: Date.UTC(2025, 6, 8),
 	method: async function () {
-		const nconf = require.main.require('nconf');
+		const nconf = nodebb.require('nconf');
 		const mainDB = nconf.get('database');
 		if (mainDB !== 'postgres') {
 			return;

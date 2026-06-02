@@ -8,8 +8,8 @@ module.exports = {
 	timestamp: Date.UTC(2025, 1, 18),
 	method: async function () {
 		const { progress } = this;
-		const nconf = require.main.require('nconf');
-		const batch = require.main.require('./src/batch');
+		const nconf = nodebb.require('nconf');
+		const batch = nodebb.require('./src/batch');
 		const isMongo = nconf.get('database') === 'mongo';
 		if (!isMongo) {
 			return;

@@ -1,14 +1,14 @@
 'use strict';
 
 
-const winston = require.main.require('winston');
+const winston = nodebb.require('winston');
 const db = module.parent.require('./database');
 
 module.exports = {
 	name: 'Changing dbsearch mongodb search schema to use _id',
 	timestamp: Date.UTC(2018, 10, 26),
 	method: async function () {
-		const nconf = require.main.require('nconf');
+		const nconf = nodebb.require('nconf');
 		const isMongo = nconf.get('database') === 'mongo';
 		if (!isMongo) {
 			return;
