@@ -57,11 +57,11 @@
 
 						<div class="mb-3">
 							<label class="form-label">Topic Limit</label>
-							<input id="topicLimit" type="text" class="form-control" placeholder="Number of topics to return" value="{topicLimit}">
+							<input id="topicLimit" type="number" class="form-control" placeholder="Number of topics to return" value="{topicLimit}">
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Post Limit</label>
-							<input id="postLimit" type="text" class="form-control" placeholder="Number of posts to return" value="{postLimit}">
+							<input id="postLimit" type="number" class="form-control" placeholder="Number of posts to return" value="{postLimit}">
 						</div>
 
 						<!-- IF mongoBackend -->
