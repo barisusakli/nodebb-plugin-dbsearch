@@ -1,8 +1,8 @@
 'use strict';
 
 define('admin/plugins/dbsearch', [
-	'alerts', 'admin/settings',
-], function (alerts, settings) {
+	'alerts', 'admin/settings', 'modals',
+], function (alerts, settings, modals) {
 	const dbsearch = {};
 	let intervalId = 0;
 
@@ -32,7 +32,7 @@ define('admin/plugins/dbsearch', [
 		});
 
 		$('#reindex').on('click', function () {
-			bootbox.confirm('Are you sure you want to reindex all content? This might take a while depending on the amount of content. During the operation the forum might slow down.', function (confirm) {
+			modals.confirm('Are you sure you want to reindex all content? This might take a while depending on the amount of content. During the operation the forum might slow down.', function (confirm) {
 				if (!confirm) {
 					return;
 				}
@@ -50,7 +50,7 @@ define('admin/plugins/dbsearch', [
 		});
 
 		$('#clear-index').on('click', function () {
-			bootbox.confirm('Are you sure you want to clear all indices? This might take a while depending on the amount of content. During the operation the forum might slow down.', function (confirm) {
+			modals.confirm('Are you sure you want to clear all indices? This might take a while depending on the amount of content. During the operation the forum might slow down.', function (confirm) {
 				if (!confirm) {
 					return;
 				}
