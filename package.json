@@ -19,7 +19,7 @@
   "author": "Baris Usakli <baris@designcreateplay.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "lodash": "4.17.23",
+    "lodash": "4.18.1",
     "redisearch": "^2.0.1"
   },
   "devDependencies": {
